@@ -1,4 +1,4 @@
-package com.example.kucingputih.model;
+package com.example.kucingputeh.model;
 
 import com.google.gson.annotations.SerializedName;
 

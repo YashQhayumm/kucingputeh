@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.kucingputih"
+    namespace = "com.example.kucingputeh"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.kucingputih"
+        applicationId = "com.example.kucingputeh"
         minSdk = 25
         targetSdk = 36
         versionCode = 1

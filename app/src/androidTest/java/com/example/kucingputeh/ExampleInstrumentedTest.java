@@ -1,4 +1,4 @@
-package com.example.kucingputih;
+package com.example.kucingputeh;
 
 import android.content.Context;
 
