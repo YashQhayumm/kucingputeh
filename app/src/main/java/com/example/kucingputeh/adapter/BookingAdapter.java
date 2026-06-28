@@ -52,30 +52,29 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         holder.tvDepartureTime.setText("Departure: " + booking.getDepartureTime());
         holder.tvSeatsBooked.setText("Seats Secured: " + booking.getSeatsBooked());
 
-        // Handle Cancel Booking Button Click
+        // Handle Cancel Booking Button Click (Simulated)
         holder.btnCancelBooking.setOnClickListener(v -> {
             int currentPos = holder.getAdapterPosition();
             if (currentPos == RecyclerView.NO_POSITION) return;
 
-            // Call the networking service
-            bookingService.cancelBooking(booking.getBookingId()).enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(context, "Booking cancelled successfully!", Toast.LENGTH_SHORT).show();
-                        // Remove item from UI list dynamically
-                        bookingList.remove(currentPos);
-                        notifyItemRemoved(currentPos);
-                    } else {
-                        Toast.makeText(context, "Failed to cancel booking.", Toast.LENGTH_SHORT).show();
-                    }
-                }
+            /* COMMENTED OUT NETWORKING TO PREVENT PERMISSION CRASHES , later tukar balik ni utk test dummy locally sahaja
 
-                @Override
-                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                    Toast.makeText(context, "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+               bookingService.cancelBooking(booking.getBookingId()).enqueue(new Callback<ResponseBody>() {
+                   @Override
+                   public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                       if (response.isSuccessful()) { ... }
+                   }
+                   @Override
+                   public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) { ... }
+               });
+            */
+
+            // SIMULATED OFFLINE REMOVAL LOGIC
+            bookingList.remove(currentPos);
+            notifyItemRemoved(currentPos);
+            notifyItemRangeChanged(currentPos, bookingList.size());
+
+            Toast.makeText(context, "Booking cancelled successfully! (Simulated)", Toast.LENGTH_SHORT).show();
         });
     }
 

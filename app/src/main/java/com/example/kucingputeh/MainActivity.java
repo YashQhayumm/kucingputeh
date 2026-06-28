@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Change activity_main to activity_booking_list to display the list container
         setContentView(R.layout.activity_booking_list);
 
         // Initialize view references
@@ -45,8 +44,11 @@ public class MainActivity extends AppCompatActivity {
         bookingList = new ArrayList<>();
         bookingService = ApiUtils.getBookingService();
 
-        // Fetch bookings for Passenger ID: 1
-        fetchUserBookings(1);
+        // COMMENTED OUT FOR TESTING: Bypassing the database network layer
+        // fetchUserBookings(1);
+
+        // Call mock data method directly instead
+        loadMockBookings();
     }
 
     private void fetchUserBookings(int passengerId) {
@@ -85,4 +87,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-}gt
+
+    private void loadMockBookings() {
+        // Matched perfectly to: (int, int, int, String, String, String, String)
+        bookingList.add(new Booking(101, 201, 1, "2", "confirmed", "Melaka Sentral", "KL Sentral"));
+        bookingList.add(new Booking(102, 202, 1, "1", "confirmed", "JB Sentral", "Larkin Sentral"));
+        bookingList.add(new Booking(103, 203, 1, "4", "confirmed", "Penang Sentral", "Ipoh Amanjaya"));
+        bookingList.add(new Booking(104, 204, 1, "2", "confirmed", "Terminal Bersepadu Selatan", "Kuantan Sentral"));
+
+        // Attach adapter data straight to your user interface
+        adapter = new BookingAdapter(MainActivity.this, bookingList);
+        rvBookings.setAdapter(adapter);
+
+        Toast.makeText(this, "Showing offline simulation data", Toast.LENGTH_SHORT).show();
+    }
+}
