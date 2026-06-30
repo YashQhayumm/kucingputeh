@@ -19,15 +19,18 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/najwa_pic"
             android:contentDescription="Profile Picture"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:clickable="true"
+            android:focusable="true" />
 
-        <!-- Name -->
+        <!-- Full Name -->
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:hint="Full Name" />
+            android:hint="Full Name"
+            android:inputType="textPersonName" />
 
         <!-- Student ID -->
         <EditText
@@ -35,7 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Student ID" />
+            android:hint="Student ID"
+            android:inputType="text" />
 
         <!-- Email -->
         <EditText
