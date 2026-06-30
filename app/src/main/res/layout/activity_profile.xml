@@ -16,9 +16,10 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
-            android:src="@drawable/profile"
-            android:contentDescription="Profile picture"
-            android:scaleType="centerCrop"/>
+            android:layout_marginTop="20dp"
+            android:src="@drawable/najwa_pic"
+            android:contentDescription="Profile Picture"
+            android:scaleType="centerCrop" />
 
         <!-- Name -->
         <EditText
@@ -26,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:hint="Full Name"/>
+            android:hint="Full Name" />
 
         <!-- Student ID -->
         <EditText
@@ -34,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Student ID"/>
+            android:hint="Student ID" />
 
         <!-- Email -->
         <EditText
@@ -43,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:hint="Email"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textEmailAddress" />
 
         <!-- Password -->
         <EditText
@@ -52,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:hint="Password"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword" />
 
         <!-- Save Button -->
         <Button
@@ -62,7 +63,7 @@
             android:layout_marginTop="20dp"
             android:text="Save Profile"
             android:backgroundTint="#1E4FA1"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
         <!-- Logout Button -->
         <Button
@@ -72,7 +73,7 @@
             android:layout_marginTop="15dp"
             android:text="Logout"
             android:backgroundTint="#D32F2F"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
