@@ -1,9 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+<<<<<<< HEAD
     <style name="Base.Theme.Kucing_putih" parent="Theme.Material3.DayNight.NoActionBar">
+=======
+    <style name="Base.Theme.Kucingputih" parent="Theme.Material3.DayNight.NoActionBar">
+>>>>>>> 20b374c020fc7df5bb55e300569900a0f90bb7d2
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+<<<<<<< HEAD
     <style name="Theme.Kucing_putih" parent="Base.Theme.Kucing_putih" />
+=======
+    <style name="Theme.Kucingputih" parent="Base.Theme.Kucingputih" />
+>>>>>>> 20b374c020fc7df5bb55e300569900a0f90bb7d2
 </resources>
