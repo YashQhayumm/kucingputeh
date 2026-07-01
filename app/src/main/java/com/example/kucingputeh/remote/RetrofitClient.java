@@ -8,17 +8,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
     private static Retrofit retrofit = null;
 
+    // Guna method ni kalau perlukan API Key
     public static Retrofit getClient(String baseUrl) {
         if (retrofit == null) {
-
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
                         Request original = chain.request();
                         Request.Builder requestBuilder = original.newBuilder()
-                                // Replaced the broken basic auth with your fresh active session token
                                 .header("api_key", "304dd25e-0f9e-4be9-8ae9-ebaf1758b079")
                                 .method(original.method(), original.body());
-
                         return chain.proceed(requestBuilder.build());
                     })
                     .build();
@@ -30,5 +28,16 @@ public class RetrofitClient {
                     .build();
         }
         return retrofit;
+    }
+
+    // Guna method ni kalau TIDAK perlukan API Key (seperti kod pertama)
+    public static Retrofit getClientWithoutAuth(String baseUrl) {
+        // Reset retrofit instance supaya ia tidak guna client yang ada interceptor
+        retrofit = null;
+
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 }

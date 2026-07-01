@@ -1,7 +1,5 @@
 package com.example.kucingputeh.remote;
 
-import static android.os.Build.VERSION_CODES.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,11 +13,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.lab_rest.model.FailLogin;
-import com.example.lab_rest.model.User;
-import com.example.lab_rest.remote.ApiUtils;
-import com.example.lab_rest.remote.UserService;
-import com.example.lab_rest.sharedpref.SharedPrefManager;
+import com.example.kucingputeh.MainActivity;
+import com.example.kucingputeh.R; // Import R yang betul
+import com.example.kucingputeh.model.FailLogin;
+import com.example.kucingputeh.model.User;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -59,9 +56,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void doLogin(String username, String password) {
         UserService userService = ApiUtils.getUserService();
-        Call<User> call = (username.contains("@")) ?
-                userService.loginEmail(username, password) :
-                userService.login(username, password);
+        Call<User> call;
+
+        if (username.contains("@")) {
+            call = userService.loginEmail(username, password);
+        } else {
+            call = userService.login(username, password);
+        }
 
         call.enqueue(new Callback<User>() {
             @Override
@@ -70,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "Response successfully received.");
                     User user = response.body();
                     if (user != null && user.getToken() != null) {
-                        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
+                        PrefManager spm = new PrefManager(getApplicationContext());
                         spm.storeUser(user);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
