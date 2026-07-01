@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // 2. Jika sudah login, paparkan Booking List
         setContentView(R.layout.activity_booking_list);
 
         rvBookings = findViewById(R.id.rvBookings);
@@ -62,10 +61,9 @@ public class MainActivity extends AppCompatActivity {
         bookingList = new ArrayList<>();
         bookingService = ApiUtils.getBookingService();
 
-        // Dapatkan ID user yang login untuk fetch data
         User user = spm.getUser();
         if (user != null) {
-            fetchUserBookings(user.getId()); // Guna ID sebenar dari SharedPref
+            fetchUserBookings(user.getId()); // Guna ID sebenar dari Pref
         }
     }
 

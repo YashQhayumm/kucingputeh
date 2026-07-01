@@ -32,9 +32,8 @@ public class RetrofitClient {
 
     // Guna method ni kalau TIDAK perlukan API Key (seperti kod pertama)
     public static Retrofit getClientWithoutAuth(String baseUrl) {
-        // Reset retrofit instance supaya ia tidak guna client yang ada interceptor
-        retrofit = null;
 
+        retrofit = null;
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
