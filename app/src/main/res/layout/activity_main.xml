@@ -12,7 +12,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginBottom="24dp"
-        android:src="@drawable/logo" /> <!-- Pastikan fail logo ada dalam drawable -->
+        android:src="@drawable/logo" />
 
     <TextView
         android:layout_width="wrap_content"
