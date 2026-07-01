@@ -14,7 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.kucingputeh.MainActivity;
-import com.example.kucingputeh.R; // Import R yang betul
+import com.example.kucingputeh.R;
 import com.example.kucingputeh.model.FailLogin;
 import com.example.kucingputeh.model.User;
 import com.google.gson.Gson;
