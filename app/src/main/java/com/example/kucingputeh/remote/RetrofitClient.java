@@ -1,5 +1,7 @@
 package com.example.kucingputeh.remote;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -8,8 +10,22 @@ public class RetrofitClient {
 
     public static Retrofit getClient(String baseUrl) {
         if (retrofit == null) {
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .addInterceptor(chain -> {
+                        Request original = chain.request();
+                        Request.Builder requestBuilder = original.newBuilder()
+                                // Replaced the broken basic auth with your fresh active session token
+                                .header("api_key", "304dd25e-0f9e-4be9-8ae9-ebaf1758b079")
+                                .method(original.method(), original.body());
+
+                        return chain.proceed(requestBuilder.build());
+                    })
+                    .build();
+
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
+                    .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
