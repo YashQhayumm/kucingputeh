@@ -1,7 +1,5 @@
 package com.example.kucingputeh.remote;
 
-package com.example.lab_rest.remote;
-
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
