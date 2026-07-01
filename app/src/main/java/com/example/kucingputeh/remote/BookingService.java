@@ -1,33 +1,36 @@
 package com.example.kucingputeh.remote;
 
+//
+import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface BookingService {
 
-    // 1. BOOK A RIDE
+    // BOOK A RIDE
     @FormUrlEncoded
-    @POST("book_ride.php")
+    @POST("Bookings")
     Call<ResponseBody> bookRide(
             @Field("passenger_id") int passengerId,
             @Field("ride_id") int rideId,
             @Field("seats_booked") int seatsBooked
     );
 
-    // 2. VIEW MY BOOKINGS
-    @FormUrlEncoded
-    @POST("view_bookings.php")
-    Call<ResponseBody> viewBookings(
-            @Field("passenger_id") int passengerId
-    );
+    // VIEW MY BOOKINGS
+    @GET("Bookings")
+    Call<ResponseBody> viewBookings(@QueryMap Map<String, String> filters);
 
-    // 3. CANCEL A BOOKING
-    @FormUrlEncoded
-    @POST("cancel_booking.php")
+    // CANCEL A BOOKING
+    @DELETE("Bookings/{id}")
     Call<ResponseBody> cancelBooking(
-            @Field("booking_id") int bookingId
+            @Path("id") int bookingId
     );
 }

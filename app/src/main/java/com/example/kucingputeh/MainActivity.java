@@ -1,6 +1,7 @@
 package com.example.kucingputeh;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,9 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -44,18 +47,22 @@ public class MainActivity extends AppCompatActivity {
         bookingList = new ArrayList<>();
         bookingService = ApiUtils.getBookingService();
 
-        // COMMENTED OUT FOR TESTING: Bypassing the database network layer
-        // fetchUserBookings(1);
-
-        // Call mock data method directly instead
-        loadMockBookings();
+        // CHANGED: Query for passenger ID 3, since that's the one we linked to Ride ID 2!
+        fetchUserBookings(3);
     }
 
     private void fetchUserBookings(int passengerId) {
-        bookingService.viewBookings(passengerId).enqueue(new Callback<ResponseBody>() {
+        // 1. Construct the filter map required by the new BookingService interface
+        Map<String, String> filters = new HashMap<>();
+        filters.put("passenger_id", String.valueOf(passengerId));
+
+        // 2. Pass the filters map into viewBookings()
+        bookingService.viewBookings(filters).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                // pRESTige returns 200 OK when matching data is found.
+                // If it returns 204, it means the query executed perfectly but found 0 matches.
+                if (response.isSuccessful() && response.body() != null && response.code() != 204) {
                     try {
                         String jsonResponse = response.body().string();
 
@@ -63,21 +70,30 @@ public class MainActivity extends AppCompatActivity {
                         Type listType = new TypeToken<List<Booking>>() {}.getType();
                         List<Booking> fetchedBookings = gson.fromJson(jsonResponse, listType);
 
+                        bookingList.clear();
                         if (fetchedBookings != null && !fetchedBookings.isEmpty()) {
-                            bookingList.clear();
                             bookingList.addAll(fetchedBookings);
 
-                            adapter = new BookingAdapter(MainActivity.this, bookingList);
+                            // Initialize adapter with your real live records
+                            adapter = new BookingAdapter(bookingList);
                             rvBookings.setAdapter(adapter);
                         } else {
-                            Toast.makeText(MainActivity.this, "No active bookings found.", Toast.LENGTH_SHORT).show();
+                            clearUIAndShowEmpty();
                         }
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Server response failed.", Toast.LENGTH_SHORT).show();
+                    // This handles empty database returns (204) and server errors safely
+                    clearUIAndShowEmpty();
+
+                    try {
+                        String errorContent = response.errorBody() != null ? response.errorBody().string() : "No error body";
+                        Log.d("SERVER_RESPONSE_LOG", "HTTP Code: " + response.code() + " | Content: " + errorContent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -88,17 +104,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void loadMockBookings() {
-        // Matched perfectly to: (int, int, int, String, String, String, String)
-        bookingList.add(new Booking(101, 201, 1, "2", "confirmed", "Melaka Sentral", "KL Sentral"));
-        bookingList.add(new Booking(102, 202, 1, "1", "confirmed", "JB Sentral", "Larkin Sentral"));
-        bookingList.add(new Booking(103, 203, 1, "4", "confirmed", "Penang Sentral", "Ipoh Amanjaya"));
-        bookingList.add(new Booking(104, 204, 1, "2", "confirmed", "Terminal Bersepadu Selatan", "Kuantan Sentral"));
-
-        // Attach adapter data straight to your user interface
-        adapter = new BookingAdapter(MainActivity.this, bookingList);
+    private void clearUIAndShowEmpty() {
+        bookingList.clear();
+        adapter = new BookingAdapter(bookingList);
         rvBookings.setAdapter(adapter);
-
-        Toast.makeText(this, "Showing offline simulation data", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "No active bookings found.", Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,12 +1,10 @@
 package com.example.kucingputeh.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,31 +12,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.model.Booking;
 import com.example.kucingputeh.remote.ApiUtils;
-import com.example.kucingputeh.remote.BookingService;
-
-import java.util.List;
 
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.List;
 
 public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingViewHolder> {
 
-    private final Context context;
-    private final List<Booking> bookingList;
-    private final BookingService bookingService;
+    private List<Booking> bookingList;
 
-    public BookingAdapter(Context context, List<Booking> bookingList) {
-        this.context = context;
+    public BookingAdapter(List<Booking> bookingList) {
         this.bookingList = bookingList;
-        this.bookingService = ApiUtils.getBookingService();
     }
 
     @NonNull
     @Override
     public BookingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.booking_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.booking_item, parent, false);
         return new BookingViewHolder(view);
     }
 
@@ -46,45 +35,46 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
         Booking booking = bookingList.get(position);
 
-        // Bind data to layout views
-        String routeText = booking.getOrigin() + " ➔ " + booking.getDestination();
-        holder.tvRoute.setText(routeText);
-        holder.tvDepartureTime.setText("Departure: " + booking.getDepartureTime());
+        holder.tvRoute.setText(booking.getOrigin() + " ➔ " + booking.getDestination());
+        holder.tvStatus.setText("Status: " + booking.getBookingStatus());
         holder.tvSeatsBooked.setText("Seats Secured: " + booking.getSeatsBooked());
 
-        // Handle Cancel Booking Button Click (Simulated)
+        // CANCEL BUTTON HERE 
         holder.btnCancelBooking.setOnClickListener(v -> {
-            int currentPos = holder.getAdapterPosition();
-            if (currentPos == RecyclerView.NO_POSITION) return;
+            int bookingIdToDelete = booking.getBookingId();
 
-            /* COMMENTED OUT NETWORKING TO PREVENT PERMISSION CRASHES , later tukar balik ni utk test dummy locally sahaja
+            ApiUtils.getBookingService().cancelBooking(bookingIdToDelete).enqueue(new retrofit2.Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NonNull retrofit2.Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
+                    // REST delete operations typically return 200 OK or 204 No Content upon success
+                    if (response.isSuccessful()) {
+                        android.widget.Toast.makeText(v.getContext(), "Booking cancelled successfully!", android.widget.Toast.LENGTH_SHORT).show();
 
-               bookingService.cancelBooking(booking.getBookingId()).enqueue(new Callback<ResponseBody>() {
-                   @Override
-                   public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                       if (response.isSuccessful()) { ... }
-                   }
-                   @Override
-                   public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) { ... }
-               });
-            */
+                        // Remove item from listdynamically
+                        bookingList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, bookingList.size());
+                    } else {
+                        android.util.Log.e("CANCEL_FAILED", "Code: " + response.code());
+                        android.widget.Toast.makeText(v.getContext(), "Failed to cancel. Server code: " + response.code(), android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-            // SIMULATED OFFLINE REMOVAL LOGIC
-            bookingList.remove(currentPos);
-            notifyItemRemoved(currentPos);
-            notifyItemRangeChanged(currentPos, bookingList.size());
-
-            Toast.makeText(context, "Booking cancelled successfully! (Simulated)", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onFailure(@NonNull retrofit2.Call<ResponseBody> call, @NonNull Throwable t) {
+                    android.widget.Toast.makeText(v.getContext(), "Network Error: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 
     @Override
     public int getItemCount() {
-        return bookingList.size();
+        return bookingList != null ? bookingList.size() : 0;
     }
 
     public static class BookingViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoute, tvDepartureTime, tvSeatsBooked;
+        TextView tvRoute, tvDepartureTime, tvSeatsBooked, tvStatus;
         Button btnCancelBooking;
 
         public BookingViewHolder(@NonNull View itemView) {
@@ -92,6 +82,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             tvRoute = itemView.findViewById(R.id.tvRoute);
             tvDepartureTime = itemView.findViewById(R.id.tvDepartureTime);
             tvSeatsBooked = itemView.findViewById(R.id.tvSeatsBooked);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
             btnCancelBooking = itemView.findViewById(R.id.btnCancelBooking);
         }
     }
