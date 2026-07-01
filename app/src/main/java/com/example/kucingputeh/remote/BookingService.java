@@ -29,7 +29,7 @@ public interface BookingService {
     Call<ResponseBody> viewBookings(@QueryMap Map<String, String> filters);
 
     // CANCEL A BOOKING
-    @DELETE("Bookings/{id}")
+    @DELETE("Bookings/{id}") //ntah kenapa syntax camni tapi gemini tolong
     Call<ResponseBody> cancelBooking(
             @Path("id") int bookingId
     );

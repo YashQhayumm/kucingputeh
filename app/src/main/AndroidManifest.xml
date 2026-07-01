@@ -26,7 +26,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="LoginActivity" android:exported="false" />
+        <activity android:name=".remote.LoginActivity" android:exported="false" />
+        <activity android:name=".BookRideActivity" android:exported="false" />
 
     </application>
 

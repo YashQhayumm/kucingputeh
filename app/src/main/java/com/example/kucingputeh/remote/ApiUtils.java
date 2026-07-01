@@ -4,7 +4,7 @@ public class ApiUtils {
 
 // REST API server URL
 
-    public static final String BASE_URL = "http://aptitude.my/2024553775/api/";
+    public static final String BASE_URL = "http://aptitude.my/kucingputeh/api/";
 // return UserService instance
 
     public static UserService getUserService() {
@@ -13,6 +13,12 @@ public class ApiUtils {
 
     }
 // return BookService instance
+
+    public static BookingService getBookingService() {
+
+        return RetrofitClient.getClient(BASE_URL).create(BookingService.class);
+
+    }
 
 }
 

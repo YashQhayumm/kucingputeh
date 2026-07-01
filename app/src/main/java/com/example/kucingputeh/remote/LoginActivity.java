@@ -19,6 +19,8 @@ import com.example.kucingputeh.model.FailLogin;
 import com.example.kucingputeh.model.User;
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void doLogin(String username, String password) {
         UserService userService = ApiUtils.getUserService();
-        Call<User> call;
+        Call<List<User>> call;
 
         if (username.contains("@")) {
             call = userService.loginEmail(username, password);
@@ -64,55 +66,49 @@ public class LoginActivity extends AppCompatActivity {
             call = userService.login(username, password);
         }
 
-        call.enqueue(new Callback<User>() {
+        call.enqueue(new Callback<List<User>>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "Response successfully received.");
-                    User user = response.body();
-                    if (user != null && user.getToken() != null) {
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<User> userList = response.body();
+                    if (!userList.isEmpty()) {
+                        User user = userList.get(0);
+
                         PrefManager spm = new PrefManager(getApplicationContext());
                         spm.storeUser(user);
+
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else {
-                        displayToast("Login successful but user data is missing");
+                        displayToast("Invalid username/email or password.");
                     }
                 } else {
                     Log.e(TAG, "Server error. Code: " + response.code());
-                    try {
-                        if (response.errorBody() != null) {
-                            String errorResp = response.errorBody().string();
-                            Log.e(TAG, "Error content: " + errorResp);
-                            FailLogin e = new Gson().fromJson(errorResp, FailLogin.class);
-                            displayToast(e.getError().getMessage());
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error parsing response", e);
-                        displayToast("Error: " + e.getMessage());
-                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<List<User>> call, Throwable t) {
                 Log.e(TAG, "Failed to connect to server: ", t);
-                displayToast("Connection failed: " + t.getMessage());
             }
         });
     }
 
     private boolean validateLogin(String username, String password) {
-        if (username.trim().isEmpty() || password.trim().isEmpty()) {
-            displayToast("Please enter username and password");
+        if (username == null || username.trim().isEmpty()) {
+            displayToast("Username/Email is required");
+            return false;
+        }
+        if (password == null || password.trim().isEmpty()) {
+            displayToast("Password is required");
             return false;
         }
         return true;
     }
 
-    public void displayToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    private void displayToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
