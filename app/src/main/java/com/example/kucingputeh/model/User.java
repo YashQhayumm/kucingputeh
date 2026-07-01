@@ -1,6 +1,5 @@
 package com.example.kucingputeh.model;
 
-
 public class User {
 
     // represent a record in users tables
