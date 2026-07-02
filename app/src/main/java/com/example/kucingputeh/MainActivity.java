@@ -58,6 +58,13 @@ public class MainActivity extends AppCompatActivity {
         rvBookings = findViewById(R.id.rvBookings);
         rvBookings.setLayoutManager(new LinearLayoutManager(this));
 
+        findViewById(R.id.btnFindRides).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
+        findViewById(R.id.btnCreateRide).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, CreateRideActivity.class)));
+        findViewById(R.id.btnMyRides).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
+
         bookingList = new ArrayList<>();
         bookingService = ApiUtils.getBookingService();
 

@@ -20,6 +20,14 @@ public class ApiUtils {
 
     }
 
+// return RideService instance
+
+    public static RideService getRideService() {
+
+        return RetrofitClient.getClient(BASE_URL).create(RideService.class);
+
+    }
+
 }
 
 

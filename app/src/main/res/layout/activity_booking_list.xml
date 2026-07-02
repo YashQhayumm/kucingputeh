@@ -15,6 +15,48 @@
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnFindRides"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:text="Find Rides"
+            android:textSize="12sp"
+            android:backgroundTint="#061369"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnCreateRide"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:text="Create Ride"
+            android:textSize="12sp"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnMyRides"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:text="My Rides"
+            android:textSize="12sp"
+            android:backgroundTint="#757575"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBookings"
         android:layout_width="match_parent"
