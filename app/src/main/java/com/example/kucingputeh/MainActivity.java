@@ -2,10 +2,10 @@ package com.example.kucingputeh;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         spm = new PrefManager(getApplicationContext());
 
-        // 1. Semak status login
+        // Check login session
         if (!spm.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -58,63 +58,116 @@ public class MainActivity extends AppCompatActivity {
         rvBookings = findViewById(R.id.rvBookings);
         rvBookings.setLayoutManager(new LinearLayoutManager(this));
 
+        // Find Rides
         findViewById(R.id.btnFindRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
+
+        // Create Ride
         findViewById(R.id.btnCreateRide).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, CreateRideActivity.class)));
+
+        // My Rides
         findViewById(R.id.btnMyRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
+
+        // Logout
+        findViewById(R.id.btnLogout).setOnClickListener(v -> {
+
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Logout")
+                    .setMessage("Are you sure you want to logout?")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Confirm", (dialog, which) -> {
+
+                        // Clear login session
+                        spm.logout();
+
+                        // Go back to Login screen
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+
+                        finish();
+                    })
+                    .show();
+        });
 
         bookingList = new ArrayList<>();
         bookingService = ApiUtils.getBookingService();
 
         User user = spm.getUser();
         if (user != null) {
-            fetchUserBookings(user.getId()); // Guna ID sebenar dari Pref
+            fetchUserBookings(user.getId());
         }
     }
 
     private void fetchUserBookings(int passengerId) {
+
         Map<String, String> filters = new HashMap<>();
         filters.put("passenger_id", String.valueOf(passengerId));
 
         bookingService.viewBookings(filters).enqueue(new Callback<ResponseBody>() {
+
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call,
+                                   @NonNull Response<ResponseBody> response) {
+
                 if (response.isSuccessful() && response.body() != null && response.code() != 204) {
+
                     try {
                         String jsonResponse = response.body().string();
+
                         Gson gson = new Gson();
                         Type listType = new TypeToken<List<Booking>>() {}.getType();
-                        List<Booking> fetchedBookings = gson.fromJson(jsonResponse, listType);
+
+                        List<Booking> fetchedBookings =
+                                gson.fromJson(jsonResponse, listType);
 
                         bookingList.clear();
+
                         if (fetchedBookings != null && !fetchedBookings.isEmpty()) {
+
                             bookingList.addAll(fetchedBookings);
+
                             adapter = new BookingAdapter(bookingList);
                             rvBookings.setAdapter(adapter);
+
                         } else {
+
                             clearUIAndShowEmpty();
                         }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                 } else {
+
                     clearUIAndShowEmpty();
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Toast.makeText(MainActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Call<ResponseBody> call,
+                                  @NonNull Throwable t) {
+
+                Toast.makeText(MainActivity.this,
+                        "Network Error: " + t.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void clearUIAndShowEmpty() {
+
         bookingList.clear();
+
         adapter = new BookingAdapter(bookingList);
+
         rvBookings.setAdapter(adapter);
-        Toast.makeText(MainActivity.this, "No active bookings found.", Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(MainActivity.this,
+                "No active bookings found.",
+                Toast.LENGTH_SHORT).show();
     }
 }
