@@ -31,16 +31,15 @@ public class ChatActivity extends AppCompatActivity {
         btnSend = findViewById(R.id.btnSend);
         scrollChat = findViewById(R.id.scrollChat);
 
-        String[] users = {
-                "Passenger",
-                "Driver"
-        };
+        String[] users = {"Passenger", "Driver"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_spinner_dropdown_item,
+                android.R.layout.simple_spinner_item,
                 users
         );
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerFrom.setAdapter(adapter);
         spinnerTo.setAdapter(adapter);
@@ -49,7 +48,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-
         String from = spinnerFrom.getSelectedItem().toString();
         String to = spinnerTo.getSelectedItem().toString();
         String message = etMessage.getText().toString().trim();
@@ -65,7 +63,6 @@ public class ChatActivity extends AppCompatActivity {
         tvMessage.setPadding(16, 12, 16, 12);
 
         chatContainer.addView(tvMessage);
-
         etMessage.setText("");
 
         scrollChat.post(() -> scrollChat.fullScroll(ScrollView.FOCUS_DOWN));
