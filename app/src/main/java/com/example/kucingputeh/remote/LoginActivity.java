@@ -15,9 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.kucingputeh.MainActivity;
 import com.example.kucingputeh.R;
-import com.example.kucingputeh.model.FailLogin;
 import com.example.kucingputeh.model.User;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -74,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (!userList.isEmpty()) {
                         User user = userList.get(0);
 
-                        PrefManager spm = new PrefManager(getApplicationContext());
+                        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
                         spm.storeUser(user);
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);

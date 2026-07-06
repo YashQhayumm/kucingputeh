@@ -17,7 +17,7 @@ import com.example.kucingputeh.model.Ride;
 import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
-import com.example.kucingputeh.remote.PrefManager;
+import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.remote.RideService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -44,14 +44,14 @@ public class ViewMyRidesActivity extends AppCompatActivity {
 
     private RideService rideService;
     private BookingService bookingService;
-    private PrefManager spm;
+    private SharedPrefManager spm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_rides);
 
-        spm = new PrefManager(getApplicationContext());
+        spm = new SharedPrefManager(getApplicationContext());
         rideService = ApiUtils.getRideService();
         bookingService = ApiUtils.getBookingService();
 

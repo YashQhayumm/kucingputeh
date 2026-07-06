@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
-import com.example.kucingputeh.remote.PrefManager;
+import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.remote.RideService;
 
 import java.util.Calendar;
@@ -29,7 +29,7 @@ public class CreateRideActivity extends AppCompatActivity {
     private Button btnPublishRide;
 
     private RideService rideService;
-    private PrefManager spm;
+    private SharedPrefManager spm;
 
     private final Calendar selectedDateTime = Calendar.getInstance();
 
@@ -38,7 +38,7 @@ public class CreateRideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_ride);
 
-        spm = new PrefManager(getApplicationContext());
+        spm = new SharedPrefManager(getApplicationContext());
         rideService = ApiUtils.getRideService();
 
         etOrigin = findViewById(R.id.etOrigin);

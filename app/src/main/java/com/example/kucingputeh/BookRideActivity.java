@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
-import com.example.kucingputeh.remote.PrefManager;
+import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.remote.RideService;
 
 import okhttp3.ResponseBody;
@@ -35,7 +35,7 @@ public class BookRideActivity extends AppCompatActivity {
 
     private BookingService bookingService;
     private RideService rideService;
-    private PrefManager spm;
+    private SharedPrefManager spm;
 
     private int currentRideId;
     private int currentPassengerId;
@@ -47,7 +47,7 @@ public class BookRideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_ride);
 
-        spm = new PrefManager(getApplicationContext());
+        spm = new SharedPrefManager(getApplicationContext());
         bookingService = ApiUtils.getBookingService();
         rideService = ApiUtils.getRideService();
 

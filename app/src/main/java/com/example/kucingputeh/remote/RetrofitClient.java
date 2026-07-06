@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
     private static Retrofit retrofit = null;
 
-    // Guna method ni kalau perlukan API Key
+
     public static Retrofit getClient(String baseUrl) {
         if (retrofit == null) {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -30,7 +30,6 @@ public class RetrofitClient {
         return retrofit;
     }
 
-    // Guna method ni kalau TIDAK perlukan API Key (seperti kod pertama)
     public static Retrofit getClientWithoutAuth(String baseUrl) {
 
         retrofit = null;

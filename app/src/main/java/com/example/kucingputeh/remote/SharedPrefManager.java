@@ -44,8 +44,6 @@ public class SharedPrefManager {
         editor.putString(KEY_VEHICLE, user.getVehicleModel());
         editor.putString(KEY_PHONE, user.getPhone());
 
-
-
         editor.apply();
     }
 
@@ -73,12 +71,7 @@ public class SharedPrefManager {
         user.setRole(sharedPreferences.getString(KEY_ROLE, null));
 
         return user;
-
-
-
-
     }
-
     /**
      * this method will logout the user. clear the SharedPreferences
      */
