@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         spm = new PrefManager(getApplicationContext());
 
-        // 1. Semak status login
         if (!spm.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -58,12 +57,24 @@ public class MainActivity extends AppCompatActivity {
         rvBookings = findViewById(R.id.rvBookings);
         rvBookings.setLayoutManager(new LinearLayoutManager(this));
 
+        findViewById(R.id.btnFindRides).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
+
+        findViewById(R.id.btnCreateRide).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, CreateRideActivity.class)));
+
+        findViewById(R.id.btnMyRides).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
+
+        findViewById(R.id.btnChat).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ChatActivity.class)));
+
         bookingList = new ArrayList<>();
         bookingService = ApiUtils.getBookingService();
 
         User user = spm.getUser();
         if (user != null) {
-            fetchUserBookings(user.getId()); // Guna ID sebenar dari Pref
+            fetchUserBookings(user.getId());
         }
     }
 
