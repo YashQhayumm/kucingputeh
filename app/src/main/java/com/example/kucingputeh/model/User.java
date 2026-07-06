@@ -1,8 +1,6 @@
 package com.example.kucingputeh.model;
 
 public class User {
-
-    // represent a record in users tables
     private int id;
     private String email;
     private String username;
@@ -12,81 +10,66 @@ public class User {
     private String role;
     private int is_active;
     private String secret;
+    private String phone;
+    private String plateNumber;
+    private String vehicleModel;
 
+    public User() {}
+
+    public User(String name, String email, String password, String plate, String model, String phone) {
+        this.username = name;
+        this.email = email;
+        this.password = password;
+        this.plateNumber = plate;
+        this.vehicleModel = model;
+        this.phone = phone;
+    }
+
+    // Getters & Setters
     public int getId() {
-        return id;
-    }
-
+        return id; }
     public void setId(int id) {
-        this.id = id;
-    }
+        this.id = id; }
 
     public String getEmail() {
-        return email;
-    }
-
+        return email; }
     public void setEmail(String email) {
-        this.email = email;
-    }
+        this.email = email; }
 
     public String getUsername() {
-        return username;
-    }
-
+        return username; }
     public void setUsername(String username) {
-        this.username = username;
-    }
+        this.username = username; }
 
     public String getPassword() {
-        return password;
-    }
-
+        return password; }
     public void setPassword(String password) {
-        this.password = password;
-    }
+        this.password = password; }
 
     public String getToken() {
-        return token;
-    }
-
+        return token; }
     public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getLease() {
-        return lease;
-    }
-
-    public void setLease(String lease) {
-        this.lease = lease;
-    }
+        this.token = token; }
 
     public String getRole() {
-        return role;
-    }
-
+        return role; }
     public void setRole(String role) {
-        this.role = role;
-    }
+        this.role = role; }
 
-    public int getIs_active() {
-        return is_active;
-    }
+    public String getPlateNumber()
+    {
+        return plateNumber; }
+    public void setPlateNumber(String plateNumber)
+    {
+        this.plateNumber = plateNumber; }
 
-    public void setIs_active(int is_active) {
-        this.is_active = is_active;
-    }
+    public String getVehicleModel() {
+        return vehicleModel; }
+    public void setVehicleModel(String vehicleModel) {
+        this.vehicleModel = vehicleModel; }
 
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-
+    public String getPhone() {
+        return phone; }
+    public void setPhone(String phone) {
+        this.phone = phone; }
 }
-
-
-

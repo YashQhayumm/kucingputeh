@@ -28,9 +28,14 @@ public class ApiUtils {
 
     }
 
+    public static DriverService getDriverService() {
+        return RetrofitClient.getClient(BASE_URL).create(DriverService.class);
+    }
+
+    public static PassengerService getPassengerService() {
+        return RetrofitClient.getClient(BASE_URL).create(PassengerService.class);
+    }
 }
-
-
 
 
 

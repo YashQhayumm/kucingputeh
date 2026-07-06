@@ -1,12 +1,10 @@
 package com.example.kucingputeh.remote;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import com.example.kucingputeh.model.User;
 
-public class PrefManager {
+public class SharedPrefManager {
 
     //the constants
     private static final String SHARED_PREF_NAME = "bookstoresharedpref";
@@ -15,10 +13,15 @@ public class PrefManager {
     private static final String KEY_EMAIL = "keyemail";
     private static final String KEY_TOKEN = "keytoken";
     private static final String KEY_ROLE = "keyrole";
+    private static final String KEY_VEHICLE = "keyvehicle";
+
+    private static final String  KEY_PLATE = "keyplatenumber";
+    private static final String KEY_PHONE = "keyphone";
+
 
     private final Context mCtx;
 
-    public PrefManager(Context context) {
+    public SharedPrefManager(Context context) {
         mCtx = context;
     }
 
@@ -35,6 +38,14 @@ public class PrefManager {
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_TOKEN, user.getToken());
         editor.putString(KEY_ROLE, user.getRole());
+
+        //for driver profile
+        editor.putString(KEY_PLATE, user.getPlateNumber());
+        editor.putString(KEY_VEHICLE, user.getVehicleModel());
+        editor.putString(KEY_PHONE, user.getPhone());
+
+
+
         editor.apply();
     }
 
@@ -54,7 +65,7 @@ public class PrefManager {
     public User getUser() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        User user = new User();
+        User user = new User(name, email, password, plate, model, phone);
         user.setId(sharedPreferences.getInt(KEY_ID, -1));
         user.setUsername(sharedPreferences.getString(KEY_USERNAME, null));
         user.setEmail(sharedPreferences.getString(KEY_EMAIL, null));
@@ -62,6 +73,10 @@ public class PrefManager {
         user.setRole(sharedPreferences.getString(KEY_ROLE, null));
 
         return user;
+
+
+
+
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.example.kucingputeh;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,7 +16,9 @@ import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
 import com.example.kucingputeh.remote.LoginActivity;
-import com.example.kucingputeh.remote.PrefManager;
+import com.example.kucingputeh.remote.SharedPrefManager;
+import com.example.kucingputeh.remote.UpdateDriverProfile;
+import com.example.kucingputeh.remote.UpdatePassengerProfile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -38,13 +40,14 @@ public class MainActivity extends AppCompatActivity {
     private BookingAdapter adapter;
     private List<Booking> bookingList;
     private BookingService bookingService;
-    private PrefManager spm;
+    private SharedPrefManager spm;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spm = new PrefManager(getApplicationContext());
+        spm = new SharedPrefManager(getApplicationContext());
 
         if (!spm.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         rvBookings = findViewById(R.id.rvBookings);
         rvBookings.setLayoutManager(new LinearLayoutManager(this));
 
+        // Setup Buttons
         findViewById(R.id.btnFindRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
 
@@ -69,6 +73,18 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnChat).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ChatActivity.class)));
 
+        findViewById(R.id.btnUpdatePassengerProfile).setOnClickListener(v -> {
+            User user = spm.getUser();
+            if (user != null) {
+                if ("driver".equalsIgnoreCase(user.getRole())) {
+                    startActivity(new Intent(MainActivity.this, UpdateDriverProfile.class));
+                } else {
+                    startActivity(new Intent(MainActivity.this, UpdatePassengerProfile.class));
+                }
+            }
+        });
+
+        // Initialize Data
         bookingList = new ArrayList<>();
         bookingService = ApiUtils.getBookingService();
 

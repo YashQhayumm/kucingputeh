@@ -11,13 +11,11 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
         tools:context=".MainActivity">
-
 
         <ImageView
             android:id="@+id/imgProfile"
@@ -137,15 +135,15 @@
             android:textColorHint="#A0A0A0" />
 
         <Button
-            android:id="@+id/btnSaveRider"
+            android:id="@+id/btnUpdatePassengerProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#061369"
-            android:text="Save Driver Profile"
+            android:text="Update Driver Profile"
             android:textColor="#FFFFFF" />
 
         <Button
-            android:id="@+id/buttonLogOut"
+            android:id="@+id/btnLogOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

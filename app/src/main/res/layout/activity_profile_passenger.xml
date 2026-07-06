@@ -14,7 +14,6 @@
         android:padding="20dp"
         tools:context=".MainActivity">
 
-        <!-- Header Profile -->
         <ImageView
             android:id="@+id/imgProfile"
             android:layout_width="80dp"
@@ -28,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="24dp"
-            android:text="Driver Name"
+            android:text="Passenger Name"
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -84,37 +83,6 @@
             android:textColor="#061369"
             android:textColorHint="#A0A0A0" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Car Plate Number:"
-            android:textColor="#061369"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-        <EditText
-            android:id="@+id/edtPlateNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:hint="AAA 1234"
-            android:textColor="#061369"
-            android:textColorHint="#A0A0A0" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Car Model:"
-            android:textColor="#061369"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-        <EditText
-            android:id="@+id/edtVehicleModel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:hint="Toyota Vios"
-            android:textColor="#061369"
-            android:textColorHint="#A0A0A0" />
 
         <TextView
             android:layout_width="match_parent"
@@ -135,16 +103,16 @@
 
         <!-- Buttons -->
         <Button
-            android:id="@+id/btnSaveRider"
+            android:id="@+id/btnUpdatePassengerProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:backgroundTint="#061369"
-            android:text="Save Driver Profile"
+            android:text="Update Passenger Profile"
             android:textColor="#FFFFFF" />
 
         <Button
-            android:id="@+id/buttonLogOut"
+            android:id="@+id/btnLogOut"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
