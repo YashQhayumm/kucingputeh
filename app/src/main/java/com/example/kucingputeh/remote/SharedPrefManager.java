@@ -65,7 +65,7 @@ public class SharedPrefManager {
     public User getUser() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-        User user = new User(name, email, password, plate, model, phone);
+        User user = new User();
         user.setId(sharedPreferences.getInt(KEY_ID, -1));
         user.setUsername(sharedPreferences.getString(KEY_USERNAME, null));
         user.setEmail(sharedPreferences.getString(KEY_EMAIL, null));
