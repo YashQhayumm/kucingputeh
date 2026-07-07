@@ -1,23 +1,25 @@
 package com.example.kucingputeh.remote;
 
+import com.example.kucingputeh.model.User;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Query;
-import java.util.List;
-
-import com.example.kucingputeh.model.User;
+import retrofit2.http.POST; // Pastikan guna @POST
 
 public interface UserService {
 
     @FormUrlEncoded
-    @GET ("users/login")
-    Call<User> login(@Field("username") String username, @Field("password") String password);
+    @POST("login.php") // Mesti guna @POST jika ada @FormUrlEncoded
+    Call<User> login(
+            @Field("username") String username,
+            @Field("password") String password
+    );
 
+    // Sama juga untuk loginEmail
     @FormUrlEncoded
-    @GET ("users/login")
-    Call<User> loginEmail(@Field("email") String username, @Field("password") String password);
-
+    @POST("login_email.php")
+    Call<User> loginEmail(
+            @Field("email") String email,
+            @Field("password") String password
+    );
 }
