@@ -55,6 +55,7 @@
             android:textSize="12sp"
             android:backgroundTint="#757575"
             android:textColor="#FFFFFF"/>
+
     </LinearLayout>
 
     <!-- For Chat -->
