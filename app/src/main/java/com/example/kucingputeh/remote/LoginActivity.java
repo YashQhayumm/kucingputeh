@@ -14,8 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.kucingputeh.MainActivity;
 import com.example.kucingputeh.R;
+import com.example.kucingputeh.ViewAvailableRidesActivity;
 import com.example.kucingputeh.model.FailLogin;
 import com.example.kucingputeh.model.User;
 import com.google.gson.Gson;
@@ -74,36 +74,59 @@ public class LoginActivity extends AppCompatActivity {
             call = userService.login(username, password);
         }
 
-        // Jalankan API call hanya sekali di sini
         call.enqueue(new Callback<User>() {
+
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
+
+                if (response.isSuccessful()) {
+
                     User user = response.body();
-                    if (user.getToken() != null) {
+
+                    if (user != null && user.getToken() != null) {
+
                         displayToast("Login successful");
 
-                        // Simpan data user
-                        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
+                        SharedPrefManager spm =
+                                new SharedPrefManager(getApplicationContext());
+
                         spm.storeUser(user);
 
-                        // Pindah ke MainActivity
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
                         finish();
+
+                        Intent intent =
+                                new Intent(LoginActivity.this, ViewAvailableRidesActivity.class);
+                        startActivity(intent);
+
                     } else {
-                        displayToast("Login error: No token received");
+
+                        displayToast("Login error");
+
                     }
+
                 } else {
-                    // Kendalikan ralat (401, 404, dll)
+
+                    String errorResp;
+
                     try {
-                        String errorResp = response.errorBody().string();
-                        FailLogin e = new Gson().fromJson(errorResp, FailLogin.class);
+
+                        errorResp = response.errorBody().string();
+
+                        FailLogin e =
+                                new Gson().fromJson(errorResp, FailLogin.class);
+
                         displayToast(e.getError().getMessage());
+
                     } catch (Exception e) {
-                        displayToast("Login failed with code: " + response.code());
+
+                        Log.e("MyApp", e.toString());
+
+                        displayToast("Error");
+
                     }
+
                 }
+
             }
 
             @Override

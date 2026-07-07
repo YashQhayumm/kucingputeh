@@ -4,7 +4,7 @@ public class ApiUtils {
 
 // REST API server URL
 
-    public static final String BASE_URL = "http://aptitude.my/kucingputeh/api/";
+    public static final String BASE_URL = "https://aptitude.my/kucingputeh/api/";
 // return UserService instance
 
     public static UserService getUserService() {

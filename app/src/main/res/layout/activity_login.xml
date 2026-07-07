@@ -74,6 +74,7 @@
             android:textAlignment="center"
             android:textColor="#061369"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
     </LinearLayout>
 
 </RelativeLayout>
