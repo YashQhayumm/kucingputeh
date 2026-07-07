@@ -6,18 +6,15 @@ import com.example.kucingputeh.model.User;
 
 public class SharedPrefManager {
 
-    //the constants
-    private static final String SHARED_PREF_NAME = "bookstoresharedpref";
+    private static final String SHARED_PREF_NAME = "kucingputeh_sharedpref";
     private static final String KEY_ID = "keyid";
     private static final String KEY_USERNAME = "keyusername";
     private static final String KEY_EMAIL = "keyemail";
     private static final String KEY_TOKEN = "keytoken";
     private static final String KEY_ROLE = "keyrole";
     private static final String KEY_VEHICLE = "keyvehicle";
-
-    private static final String  KEY_PLATE = "keyplatenumber";
+    private static final String KEY_PLATE = "keyplatenumber";
     private static final String KEY_PHONE = "keyphone";
-
 
     private final Context mCtx;
 
@@ -25,21 +22,15 @@ public class SharedPrefManager {
         mCtx = context;
     }
 
-    /**
-     * method to let the user login
-     * this method will store the user data in shared preferences
-     * @param user
-     */
     public void storeUser(User user) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+
         editor.putInt(KEY_ID, user.getId());
         editor.putString(KEY_USERNAME, user.getUsername());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_TOKEN, user.getToken());
         editor.putString(KEY_ROLE, user.getRole());
-
-        //for driver profile
         editor.putString(KEY_PLATE, user.getPlateNumber());
         editor.putString(KEY_VEHICLE, user.getVehicleModel());
         editor.putString(KEY_PHONE, user.getPhone());
@@ -47,19 +38,12 @@ public class SharedPrefManager {
         editor.apply();
     }
 
-    /**
-     * this method will checker whether user is already logged in or not.
-     * return True if already logged in
-     */
-
     public boolean isLoggedIn() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(KEY_USERNAME, null) != null;
     }
 
-    /**
-     * this method will give the information of logged in user, retrieved from SharedPreferences
-     */
+    // Satu sahaja method getUser yang lengkap
     public User getUser() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -69,12 +53,13 @@ public class SharedPrefManager {
         user.setEmail(sharedPreferences.getString(KEY_EMAIL, null));
         user.setToken(sharedPreferences.getString(KEY_TOKEN, null));
         user.setRole(sharedPreferences.getString(KEY_ROLE, null));
+        user.setPlateNumber(sharedPreferences.getString(KEY_PLATE, null));
+        user.setVehicleModel(sharedPreferences.getString(KEY_VEHICLE, null));
+        user.setPhone(sharedPreferences.getString(KEY_PHONE, null));
 
         return user;
     }
-    /**
-     * this method will logout the user. clear the SharedPreferences
-     */
+
     public void logout() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();

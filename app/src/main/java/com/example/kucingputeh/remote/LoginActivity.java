@@ -15,9 +15,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.kucingputeh.MainActivity;
 import com.example.kucingputeh.R;
+import com.example.kucingputeh.model.FailLogin;
 import com.example.kucingputeh.model.User;
-
-import java.util.List;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,8 +25,8 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText edtUsername, edtPassword;
-    private static final String TAG = "LoginActivity_Debug";
+    private EditText edtUsername;
+    private EditText edtPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,54 +49,64 @@ public class LoginActivity extends AppCompatActivity {
         String password = edtPassword.getText().toString();
 
         if (validateLogin(username, password)) {
-            Log.d(TAG, "Attempting login for: " + username);
             doLogin(username, password);
         }
     }
 
     private void doLogin(String username, String password) {
         UserService userService = ApiUtils.getUserService();
-        Call<List<User>> call;
+        Call<User> call;
 
-        if (username.contains("@")) {
+        // Pilih kaedah login yang betul
+        if(username.contains("@")) {
             call = userService.loginEmail(username, password);
         } else {
             call = userService.login(username, password);
         }
 
-        call.enqueue(new Callback<List<User>>() {
+        // Jalankan API call hanya sekali di sini
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<User> userList = response.body();
-                    if (!userList.isEmpty()) {
-                        User user = userList.get(0);
+                    User user = response.body();
+                    if (user.getToken() != null) {
+                        displayToast("Login successful");
 
+                        // Simpan data user
                         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
                         spm.storeUser(user);
 
+                        // Pindah ke MainActivity
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else {
-                        displayToast("Invalid username/email or password.");
+                        displayToast("Login error: No token received");
                     }
                 } else {
-                    Log.e(TAG, "Server error. Code: " + response.code());
+                    // Kendalikan ralat (401, 404, dll)
+                    try {
+                        String errorResp = response.errorBody().string();
+                        FailLogin e = new Gson().fromJson(errorResp, FailLogin.class);
+                        displayToast(e.getError().getMessage());
+                    } catch (Exception e) {
+                        displayToast("Login failed with code: " + response.code());
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                Log.e(TAG, "Failed to connect to server: ", t);
+            public void onFailure(Call<User> call, Throwable t) {
+                displayToast("Error connecting to server.");
+                Log.e("LoginActivity", "Error: " + t.getMessage());
             }
         });
     }
 
     private boolean validateLogin(String username, String password) {
         if (username == null || username.trim().isEmpty()) {
-            displayToast("Username/Email is required");
+            displayToast("Username is required");
             return false;
         }
         if (password == null || password.trim().isEmpty()) {
@@ -106,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private void displayToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    public void displayToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }
