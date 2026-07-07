@@ -73,8 +73,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnChat).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ChatActivity.class)));
 
+        findViewById(R.id.btnProfile).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
+
         findViewById(R.id.btnUpdatePassengerProfile).setOnClickListener(v -> {
             User user = spm.getUser();
+
             if (user != null) {
                 if ("driver".equalsIgnoreCase(user.getRole())) {
                     startActivity(new Intent(MainActivity.this, UpdateDriverProfile.class));

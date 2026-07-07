@@ -58,7 +58,6 @@
 
     </LinearLayout>
 
-    <!-- For Chat -->
     <Button
         android:id="@+id/btnChat"
         android:layout_width="match_parent"
@@ -66,6 +65,17 @@
         android:text="Chat"
         android:textStyle="bold"
         android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- NEW PROFILE BUTTON -->
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:textStyle="bold"
+        android:backgroundTint="#9C27B0"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="12dp"/>
 
