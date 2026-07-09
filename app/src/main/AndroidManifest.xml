@@ -49,6 +49,13 @@
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".remote.UpdatePassengerProfile"
+            android:exported="false" />
+
+        <activity
+            android:name=".remote.UpdateDriverProfile"
+            android:exported="false" />
+        <activity
             android:name=".Register"
             android:exported="false" />
 
