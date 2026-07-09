@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.kucingputeh.remote.LoginActivity; // Import LoginActivity anda
 
 public class HomePage extends AppCompatActivity {
-
+// homepage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
