@@ -1,12 +1,15 @@
 package com.example.kucingputeh;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.kucingputeh.remote.ApiUtils;
@@ -20,18 +23,23 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText edtName, edtEmail, edtPassword, edtPlateNumber, edtVehicleModel, edtPhone;
+    private EditText edtName, edstuID, edtEmail, edtPassword, edtPlateNumber, edtVehicleModel, edtPhone;
     private RadioGroup rgRole;
     private Button btnRegister;
     private UserService userService;
 
+    private LinearLayout layoutDriverFields;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Inisialisasi View
 
         edtName = findViewById(R.id.edtName);
+        edstuID = findViewById(R.id.edstuID);
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         edtPlateNumber = findViewById(R.id.edtPlateNumber);
@@ -40,51 +48,56 @@ public class RegisterActivity extends AppCompatActivity {
         rgRole = findViewById(R.id.rgRole);
         btnRegister = findViewById(R.id.btnRegister);
 
-        userService = ApiUtils.getUserService(); // Guna service yang sama
+
+        layoutDriverFields = findViewById(R.id.layoutDriverFields);
+
+        rgRole.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rbDriver) {
+                layoutDriverFields.setVisibility(View.VISIBLE);
+            } else {
+                layoutDriverFields.setVisibility(View.GONE);
+            }
+        });
+
+        userService = ApiUtils.getUserService();
         btnRegister.setOnClickListener(v -> performRegister());
     }
-
     private void performRegister() {
-       //from input user
         String name = edtName.getText().toString().trim();
+        String studentId = edstuID.getText().toString().trim();
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
-        String plate = edtPlateNumber.getText().toString().trim();
-        String model = edtVehicleModel.getText().toString().trim();
         String phone = edtPhone.getText().toString().trim();
 
-        // radiobutton
-        rgRole = findViewById(R.id.rgRole);
-        EditText edtPlateNumber = findViewById(R.id.edtPlateNumber);
-        EditText edtVehicleModel = findViewById(R.id.edtVehicleModel);
-
+        // get Role
         int selectedId = rgRole.getCheckedRadioButtonId();
         RadioButton rbSelected = findViewById(selectedId);
         String role = rbSelected.getText().toString().toLowerCase();
 
-        rgRole.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rbDriver) {
-                // for driver only
-                edtPlateNumber.setVisibility(View.VISIBLE);
-                edtVehicleModel.setVisibility(View.VISIBLE);
-            } else {
-                //passenger not allwed to fill in
-                edtPlateNumber.setVisibility(View.GONE);
-                edtVehicleModel.setVisibility(View.GONE);
-            }
-        });
 
-        userService.registerUser(name, email, password, role, plate, model, phone)
+        String plate = "";
+        String model = "";
+        if (selectedId == R.id.rbDriver) {
+            plate = edtPlateNumber.getText().toString().trim();
+            model = edtVehicleModel.getText().toString().trim();
+        }
+
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Hantar ke API
+        userService.registerUser(name, studentId, email, password, role, plate, model, phone)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                            // login page after successfull register
                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Registration Failed: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
                     }
 

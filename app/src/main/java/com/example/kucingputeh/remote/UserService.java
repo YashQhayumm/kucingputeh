@@ -26,7 +26,9 @@ public interface UserService {
         @FormUrlEncoded
         @POST("users/register")
         Call<ResponseBody> registerUser(
+
                 @Field("username") String username,
+                @Field("StudentID") String studentId,
                 @Field("email") String email,
                 @Field("password") String password,
                 @Field("role") String role,

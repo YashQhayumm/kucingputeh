@@ -142,15 +142,5 @@
             android:text="Update Driver Profile"
             android:textColor="#FFFFFF" />
 
-        <Button
-            android:id="@+id/btnLogOut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="#A10B0B"
-            android:text="LogOut"
-            android:textColor="#FFFFFF" />
-
     </LinearLayout>
 </ScrollView>

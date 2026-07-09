@@ -47,14 +47,12 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Di dalam onCreate LoginActivity.java
-        TextView tvRegister = findViewById(R.id.textViewRegister); // Pastikan ID sama dengan XML
-
+        TextView tvRegister = findViewById(R.id.textViewRegister);
         tvRegister.setOnClickListener(v -> {
-            // Apabila ditekan, ia akan buka RegisterActivity
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
+
 
 
         Button btnLogin = findViewById(R.id.btnLogin);

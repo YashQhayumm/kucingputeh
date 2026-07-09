@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
@@ -11,20 +9,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imgProfile"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
             android:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
             android:text="New User Registration"
             android:textColor="#000000"
@@ -36,8 +34,8 @@
             android:layout_height="wrap_content"
             android:text="Role:"
             android:textColor="#061369"
-            android:textSize="14sp"
             android:textStyle="bold" />
+
         <RadioGroup
             android:id="@+id/rgRole"
             android:layout_width="match_parent"
@@ -67,23 +65,33 @@
             android:layout_height="wrap_content"
             android:text="Name:"
             android:textColor="#061369"
-            android:textSize="14sp"
             android:textStyle="bold" />
         <EditText
             android:id="@+id/edtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:hint="Full Name"
+            android:hint="Full Name" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="StudentID:"
             android:textColor="#061369"
-            android:textColorHint="#A0A0A0" />
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/edstuID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="Full Name" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Email:"
             android:textColor="#061369"
-            android:textSize="14sp"
             android:textStyle="bold" />
         <EditText
             android:id="@+id/edtEmail"
@@ -91,16 +99,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:hint="example@email.com"
-            android:inputType="textEmailAddress"
-            android:textColor="#061369"
-            android:textColorHint="#A0A0A0" />
+            android:inputType="textEmailAddress" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Password:"
             android:textColor="#061369"
-            android:textSize="14sp"
             android:textStyle="bold" />
         <EditText
             android:id="@+id/edtPassword"
@@ -108,61 +113,54 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:hint="Enter password"
-            android:inputType="textPassword"
-            android:textColor="#061369"
-            android:textColorHint="#A0A0A0" />
+            android:inputType="textPassword" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/layoutDriverFields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Car Plate Number:"
             android:textColor="#061369"
-            android:textSize="14sp"
             android:textStyle="bold" />
-        <EditText
-            android:id="@+id/edtPlateNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:hint="AAA 1234"
-            android:textColor="#061369"
-            android:textColorHint="#A0A0A0" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Car Model:"
-            android:textColor="#061369"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:visibility="gone"/>
+            <EditText
+                android:id="@+id/edtPlateNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="AAA 1234" />
 
-        <EditText
-            android:id="@+id/edtVehicleModel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:hint="Toyota Vios"
-            android:textColor="#061369"
-            android:textColorHint="#A0A0A0"
-            android:visibility="gone"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Car Model:"
+                android:textColor="#061369"
+                android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/edtVehicleModel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Toyota Vios" />
+        </LinearLayout>
+
+        <TextView android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Phone Number:"
             android:textColor="#061369"
-            android:textSize="14sp"
             android:textStyle="bold" />
-        <EditText
-            android:id="@+id/edtPhone"
+
+        <EditText android:id="@+id/edtPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:hint="01x-xxxxxxx"
-            android:inputType="phone"
-            android:textColor="#061369"
-            android:textColorHint="#A0A0A0" />
+            android:inputType="phone" />
 
         <Button
             android:id="@+id/btnRegister"

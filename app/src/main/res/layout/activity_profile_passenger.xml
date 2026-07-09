@@ -36,7 +36,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email:"
+            android:text=" Email:"
             android:textColor="#061369"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -70,7 +70,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name:"
+            android:text=" Name:"
             android:textColor="#061369"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -82,7 +82,22 @@
             android:hint="Full Name"
             android:textColor="#061369"
             android:textColorHint="#A0A0A0" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Student ID:"
+            android:textColor="#061369"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
+        <EditText
+            android:id="@+id/edtstuid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="Student ID"
+            android:textColor="#061369"
+            android:textColorHint="#A0A0A0" />
 
         <TextView
             android:layout_width="match_parent"
@@ -109,16 +124,6 @@
             android:layout_marginTop="10dp"
             android:backgroundTint="#061369"
             android:text="Update Passenger Profile"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnLogOut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="#A10B0B"
-            android:text="LogOut"
             android:textColor="#FFFFFF" />
 
     </LinearLayout>
