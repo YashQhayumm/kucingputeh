@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                                 new SharedPrefManager(getApplicationContext());
 
                         spm.storeUser(user);
-
+//2pm 9.7
                         finish();
 
                         Intent intent =
