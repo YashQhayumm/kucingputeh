@@ -4,22 +4,22 @@ import com.google.gson.annotations.SerializedName;
 
 public class Ride {
 
-    @SerializedName(value = "ride_id", alternate = {"RideID", "rideId"})
+    @SerializedName(value = "RideID", alternate = {"ride_id", "rideId", "id"})
     private int rideId;
 
     @SerializedName(value = "driver_id", alternate = {"DriverID", "driverId"})
     private int driverId;
 
-    @SerializedName(value = "origin", alternate = {"Origin"})
+    @SerializedName(value = "Origin", alternate = {"origin"})
     private String origin;
 
-    @SerializedName(value = "destination", alternate = {"Destination"})
+    @SerializedName(value = "Destination", alternate = {"destination"})
     private String destination;
 
-    @SerializedName(value = "departure_time", alternate = {"DepartureTime", "departureTime"})
+    @SerializedName(value = "DepartureTime", alternate = {"departure_time", "departureTime"})
     private String departureTime;
 
-    @SerializedName(value = "available_seats", alternate = {"AvailableSeats", "availableSeats"})
+    @SerializedName(value = "available_seats", alternate = {"AvailableSeats", "seats"})
     private int availableSeats;
 
     public Ride() {}
@@ -38,13 +38,13 @@ public class Ride {
     public int getDriverId() { return driverId; }
     public void setDriverId(int driverId) { this.driverId = driverId; }
 
-    public String getOrigin() { return origin; }
+    public String getOrigin() { return origin == null ? "" : origin; }
     public void setOrigin(String origin) { this.origin = origin; }
 
-    public String getDestination() { return destination; }
+    public String getDestination() { return destination == null ? "" : destination; }
     public void setDestination(String destination) { this.destination = destination; }
 
-    public String getDepartureTime() { return departureTime; }
+    public String getDepartureTime() { return departureTime == null ? "" : departureTime; }
     public void setDepartureTime(String departureTime) { this.departureTime = departureTime; }
 
     public int getAvailableSeats() { return availableSeats; }
