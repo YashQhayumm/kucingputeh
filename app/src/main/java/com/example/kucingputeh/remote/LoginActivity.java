@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -15,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.kucingputeh.R;
+import com.example.kucingputeh.Register;
 import com.example.kucingputeh.ViewAvailableRidesActivity;
 import com.example.kucingputeh.model.FailLogin;
 import com.example.kucingputeh.model.User;
@@ -51,6 +53,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loginClicked(v);
             }
+        });
+
+        TextView textViewRegister = findViewById(R.id.textViewRegister);
+        textViewRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, Register.class);
+            startActivity(intent);
         });
     }
 
