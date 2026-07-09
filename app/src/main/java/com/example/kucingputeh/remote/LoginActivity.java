@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.kucingputeh.DashboardActivity;
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.Register;
 import com.example.kucingputeh.ViewAvailableRidesActivity;
@@ -103,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
 
                         Intent intent =
-                                new Intent(LoginActivity.this, ViewAvailableRidesActivity.class);
+                                new Intent(LoginActivity.this, DashboardActivity.class);
                         startActivity(intent);
 
                     } else {
