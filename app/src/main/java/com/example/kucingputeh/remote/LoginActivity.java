@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                         spm.storeUser(user);
 //2pm 9.7
                         finish();
-
+// 2 lebih commit
                         Intent intent =
                                 new Intent(LoginActivity.this, ViewAvailableRidesActivity.class);
                         startActivity(intent);
