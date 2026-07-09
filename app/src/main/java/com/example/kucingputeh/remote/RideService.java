@@ -17,26 +17,28 @@ import retrofit2.http.Query;
 
 public interface RideService {
 
-    // VIEW AVAILABLE RIDES - all rides posted on the platform
+    // VIEW AVAILABLE RIDES
     @GET("Rides")
     Call<List<Ride>> getAllRides();
 
-    // VIEW MY RIDES - rides created by the currently logged-in driver
+    // VIEW MY RIDES
     @GET("Rides")
     Call<List<Ride>> getRidesByDriver(@Query("driver_id") int driverId);
 
-    // CREATE RIDE
+    // CREATE RIDE - Updated based on provided parameters
     @FormUrlEncoded
     @POST("Rides")
     Call<ResponseBody> createRide(
             @Field("driver_id") int driverId,
-            @Field("origin") String origin,
-            @Field("destination") String destination,
-            @Field("departure_time") String departureTime,
-            @Field("available_seats") int availableSeats
+            @Field("Origin") String origin,
+            @Field("Destination") String destination,
+            @Field("DepartureTime") String departureTime,
+            @Field("total_seats") int totalSeats,
+            @Field("available_seats") int availableSeats,
+            @Field("status") String status
     );
 
-    // Used after a booking is made, to reduce the seat count on the ride
+    // Update Available Seats
     @FormUrlEncoded
     @PATCH("Rides/{id}")
     Call<ResponseBody> updateAvailableSeats(
@@ -44,7 +46,6 @@ public interface RideService {
             @Field("available_seats") int availableSeats
     );
 
-    // Optional: remove a ride (not required by the spec, kept for completeness)
     @DELETE("Rides/{id}")
     Call<ResponseBody> deleteRide(@Path("id") int rideId);
 }
