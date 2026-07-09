@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 1. TUKAR DI SINI kepada layout file 'Home' anda
         setContentView(R.layout.activity_homepage);
 
         spm = new SharedPrefManager(getApplicationContext());
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         }
         */
 
-        // 3. Butang Login (Ke LoginActivity)
         Button btnLogin = findViewById(R.id.btnGoToLogin);
         if (btnLogin != null) {
             btnLogin.setOnClickListener(v -> {
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        // 4. Setup Butang-butang lain
+
         findViewById(R.id.btnFindRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
 
@@ -97,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        // 2 lebih
 
-        // 5. Setup data (hanya jalan kalau user dah login)
+
+
         rvBookings = findViewById(R.id.rvBookings);
         if (rvBookings != null) {
             rvBookings.setLayoutManager(new LinearLayoutManager(this));

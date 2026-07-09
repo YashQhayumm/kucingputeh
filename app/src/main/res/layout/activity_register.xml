@@ -134,7 +134,9 @@
             android:text="Car Model:"
             android:textColor="#061369"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
         <EditText
             android:id="@+id/edtVehicleModel"
             android:layout_width="match_parent"
@@ -142,7 +144,8 @@
             android:layout_marginBottom="12dp"
             android:hint="Toyota Vios"
             android:textColor="#061369"
-            android:textColorHint="#A0A0A0" />
+            android:textColorHint="#A0A0A0"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="match_parent"

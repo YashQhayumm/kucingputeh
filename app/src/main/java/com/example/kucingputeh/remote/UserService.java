@@ -1,13 +1,14 @@
 package com.example.kucingputeh.remote;
 
 import com.example.kucingputeh.model.User;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 public interface UserService {
-// make sure macam ni
     @FormUrlEncoded
     @POST("users/login")
     Call<User> login(
@@ -21,4 +22,17 @@ public interface UserService {
             @Field("email") String email,
             @Field("password") String password
     );
-}
+
+        @FormUrlEncoded
+        @POST("users/register")
+        Call<ResponseBody> registerUser(
+                @Field("username") String username,
+                @Field("email") String email,
+                @Field("password") String password,
+                @Field("role") String role,
+                @Field("plate_number") String plateNumber,
+                @Field("car_model") String vehicleModel,
+                @Field("phone") String phone
+        );
+    }
+

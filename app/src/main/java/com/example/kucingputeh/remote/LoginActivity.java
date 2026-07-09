@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -14,7 +15,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.kucingputeh.ProfileActivity;
 import com.example.kucingputeh.R;
+import com.example.kucingputeh.RegisterActivity;
 import com.example.kucingputeh.ViewAvailableRidesActivity;
 import com.example.kucingputeh.model.FailLogin;
 import com.example.kucingputeh.model.User;
@@ -44,6 +47,15 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Di dalam onCreate LoginActivity.java
+        TextView tvRegister = findViewById(R.id.textViewRegister); // Pastikan ID sama dengan XML
+
+        tvRegister.setOnClickListener(v -> {
+            // Apabila ditekan, ia akan buka RegisterActivity
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
+
 
         Button btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginClicked(v);
             }
         });
+
     }
 
     public void loginClicked(View view) {
@@ -95,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
 // 2 lebih commit
                         Intent intent =
-                                new Intent(LoginActivity.this, ViewAvailableRidesActivity.class);
+                                new Intent(LoginActivity.this, ProfileActivity.class);
                         startActivity(intent);
 
                     } else {

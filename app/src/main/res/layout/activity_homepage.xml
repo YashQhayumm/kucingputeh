@@ -30,7 +30,6 @@
         android:textStyle="bold"
         android:textColor="#061369" />
 
-
     <Button
         android:id="@+id/btnGoToLogin"
         android:layout_width="match_parent"
