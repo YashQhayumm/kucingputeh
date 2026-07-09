@@ -2,6 +2,7 @@ package com.example.kucingputeh;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -100,7 +101,13 @@ public class CreateRideActivity extends AppCompatActivity {
             return;
         }
 
-        int availableSeats = Integer.parseInt(seatsInput);
+        int availableSeats;
+        try {
+            availableSeats = Integer.parseInt(seatsInput);
+        } catch (NumberFormatException e) {
+            etAvailableSeats.setError("Enter a valid number of seats");
+            return;
+        }
         if (availableSeats <= 0) {
             etAvailableSeats.setError("Must offer at least 1 seat");
             return;
@@ -118,17 +125,34 @@ public class CreateRideActivity extends AppCompatActivity {
     private void publishRide(int driverId, String origin, String destination, String departureTime, int availableSeats) {
         btnPublishRide.setEnabled(false);
 
-        rideService.createRide(driverId, origin, destination, departureTime, availableSeats)
+        // Based on the REST test parameters, we send total_seats, available_seats, and status
+        rideService.createRide(driverId, origin, destination, departureTime, availableSeats, availableSeats, "available")
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         btnPublishRide.setEnabled(true);
                         if (response.isSuccessful()) {
                             Toast.makeText(CreateRideActivity.this, "Ride published successfully!", Toast.LENGTH_LONG).show();
+                            
+                            // Return to MainActivity
+                            Intent intent = new Intent(CreateRideActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivity(intent);
                             finish();
                         } else {
-                            Log.e("CREATE_RIDE", "Server returned code: " + response.code());
-                            Toast.makeText(CreateRideActivity.this, "Failed to publish ride. Server code: " + response.code(), Toast.LENGTH_SHORT).show();
+                            String serverMessage = "";
+                            try {
+                                if (response.errorBody() != null) {
+                                    serverMessage = response.errorBody().string();
+                                }
+                            } catch (java.io.IOException e) {
+                                Log.e("CREATE_RIDE", "Could not read error body", e);
+                            }
+                            Log.e("CREATE_RIDE", "Server returned code: " + response.code() + " body: " + serverMessage);
+                            Toast.makeText(CreateRideActivity.this,
+                                    "Failed to publish ride (" + response.code() + "): " +
+                                            (serverMessage.isEmpty() ? "no details from server" : serverMessage),
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
 
