@@ -22,42 +22,42 @@
             android:scaleType="centerCrop" />
 
         <!-- Full Name -->
-        <EditText
-            android:id="@+id/etName"
+        <TextView
+            android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="Full_name"
-            android:inputType="textPersonName"
-            android:autofillHints="name" />
+            android:textSize="18sp"
+            android:padding="8dp" />
 
         <!-- Email -->
-        <EditText
-            android:id="@+id/etEmail"
+        <TextView
+            android:id="@+id/tvEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:hint="email"
-            android:inputType="textEmailAddress"
-            android:autofillHints="emailAddress" />
+            android:textSize="18sp"
+            android:padding="8dp" />
 
         <!-- Phone Number -->
-        <EditText
-            android:id="@+id/etPhone"
+        <TextView
+            android:id="@+id/tvPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:hint="phone number"
-            android:inputType="phone"
-            android:autofillHints="phone" />
+            android:textSize="18sp"
+            android:padding="8dp" />
 
-        <!-- Update Profile -->
+        <!-- Edit Profile -->
         <Button
-            android:id="@+id/btnUpdate"
+            android:id="@+id/btnEditProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Update Profile"
+            android:text="Edit Profile"
             android:backgroundTint="#1E4FA1"
             android:textColor="@android:color/white" />
 
