@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class ViewAvailableRidesActivity extends AppCompatActivity {
     private RecyclerView rvRides;
     private TextView tvEmptyRides;
     private EditText etSearchDestination;
+    private Button btnRefreshRides;
 
     private RideAdapter adapter;
     private RideService rideService;
@@ -49,6 +51,9 @@ public class ViewAvailableRidesActivity extends AppCompatActivity {
         rvRides = findViewById(R.id.rvRides);
         tvEmptyRides = findViewById(R.id.tvEmptyRides);
         etSearchDestination = findViewById(R.id.etSearchDestination);
+        btnRefreshRides = findViewById(R.id.btnRefreshRides);
+
+        btnRefreshRides.setOnClickListener(v -> fetchAvailableRides());
 
         rvRides.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RideAdapter(rideList, this::openBookRideScreen);
