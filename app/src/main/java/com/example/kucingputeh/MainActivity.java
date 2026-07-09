@@ -3,6 +3,7 @@ package com.example.kucingputeh;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -45,38 +46,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_homepage);
+        setContentView(R.layout.activity_booking_list);
 
         spm = new SharedPrefManager(getApplicationContext());
 
-        // Login Button
-        Button btnLogin = findViewById(R.id.btnGoToLogin);
-        if (btnLogin != null) {
-            btnLogin.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-            });
+        // Dashboard Buttons
+        View btnFindRides = findViewById(R.id.btnFindRides);
+        if (btnFindRides != null) {
+            btnFindRides.setOnClickListener(v ->
+                    startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
         }
 
-        // Find Rides
-        findViewById(R.id.btnFindRides).setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
+        View btnCreateRide = findViewById(R.id.btnCreateRide);
+        if (btnCreateRide != null) {
+            btnCreateRide.setOnClickListener(v ->
+                    startActivity(new Intent(MainActivity.this, CreateRideActivity.class)));
+        }
 
-        // Create Ride
-        findViewById(R.id.btnCreateRide).setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, CreateRideActivity.class)));
+        View btnMyRides = findViewById(R.id.btnMyRides);
+        if (btnMyRides != null) {
+            btnMyRides.setOnClickListener(v ->
+                    startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
+        }
 
-        // My Rides
-        findViewById(R.id.btnMyRides).setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
+        View btnChat = findViewById(R.id.btnChat);
+        if (btnChat != null) {
+            btnChat.setOnClickListener(v ->
+                    startActivity(new Intent(MainActivity.this, ChatActivity.class)));
+        }
 
-        // Chat
-        findViewById(R.id.btnChat).setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, ChatActivity.class)));
-
-        // Profile
-        findViewById(R.id.btnProfile).setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
+        View btnProfile = findViewById(R.id.btnProfile);
+        if (btnProfile != null) {
+            btnProfile.setOnClickListener(v ->
+                    startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
+        }
 
         // Load Booking List
         rvBookings = findViewById(R.id.rvBookings);

@@ -26,8 +26,17 @@
             android:id="@+id/btnRefreshRides"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:text="Refresh"
             android:backgroundTint="#061369"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:id="@+id/btnGoToBookings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Bookings"
+            android:backgroundTint="#4CAF50"
             android:textColor="#FFFFFF"/>
 
     </LinearLayout>
