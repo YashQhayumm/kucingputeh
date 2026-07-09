@@ -1,5 +1,6 @@
 package com.example.kucingputeh.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kucingputeh.ChatActivity;
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.model.Booking;
 import com.example.kucingputeh.remote.ApiUtils;
@@ -38,6 +40,14 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         holder.tvRoute.setText(booking.getOrigin() + " ➔ " + booking.getDestination());
         holder.tvStatus.setText("Status: " + booking.getBookingStatus());
         holder.tvSeatsBooked.setText("Seats Secured: " + booking.getSeatsBooked());
+
+        holder.btnChatWithDriver.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), ChatActivity.class);
+            // Assuming driver_id is available in Booking/Ride model
+            intent.putExtra("RIDE_ID", booking.getRideId());
+            intent.putExtra("PASSENGER_ID", booking.getPassengerId());
+            v.getContext().startActivity(intent);
+        });
 
         // CANCEL BUTTON HERE 
         holder.btnCancelBooking.setOnClickListener(v -> {
@@ -75,7 +85,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
     public static class BookingViewHolder extends RecyclerView.ViewHolder {
         TextView tvRoute, tvDepartureTime, tvSeatsBooked, tvStatus;
-        Button btnCancelBooking;
+        Button btnCancelBooking, btnChatWithDriver;
 
         public BookingViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,6 +94,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             tvSeatsBooked = itemView.findViewById(R.id.tvSeatsBooked);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             btnCancelBooking = itemView.findViewById(R.id.btnCancelBooking);
+            btnChatWithDriver = itemView.findViewById(R.id.btnChatWithDriver);
         }
     }
 }

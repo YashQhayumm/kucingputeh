@@ -15,60 +15,27 @@
         android:textStyle="bold"
         android:layout_marginBottom="16dp"/>
 
-    <!-- First Row -->
-    <LinearLayout
+    <Button
+        android:id="@+id/btnFindRides"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="10dp">
-
-        <Button
-            android:id="@+id/btnFindRides"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="4dp"
-            android:text="Find Rides"
-            android:textSize="12sp"
-            android:backgroundTint="#061369"
-            android:textColor="#FFFFFF"/>
-
-        <Button
-            android:id="@+id/btnCreateRide"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:text="Create Ride"
-            android:textSize="12sp"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#FFFFFF"/>
-
-        <Button
-            android:id="@+id/btnMyRides"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="4dp"
-            android:text="My Rides"
-            android:textSize="12sp"
-            android:backgroundTint="#757575"
-            android:textColor="#FFFFFF"/>
-
-    </LinearLayout>
+        android:text="Find Rides"
+        android:layout_marginBottom="8dp"/>
 
     <Button
-        android:id="@+id/btnChat"
+        android:id="@+id/btnCreateRide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Chat"
-        android:textStyle="bold"
-        android:backgroundTint="#2196F3"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="12dp"/>
+        android:text="Create Ride"
+        android:layout_marginBottom="8dp"/>
 
-    <!-- NEW PROFILE BUTTON -->
+    <Button
+        android:id="@+id/btnMyRides"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My Rides"
+        android:layout_marginBottom="8dp"/>
+
     <Button
         android:id="@+id/btnProfile"
         android:layout_width="match_parent"

@@ -35,6 +35,9 @@ public class ApiUtils {
     public static PassengerService getPassengerService() {
         return RetrofitClient.getClient(BASE_URL).create(PassengerService.class);
     }
+    public static ChatService getChatService() {
+        return RetrofitClient.getClient(BASE_URL).create(ChatService.class);
+    }
 }
 
 
