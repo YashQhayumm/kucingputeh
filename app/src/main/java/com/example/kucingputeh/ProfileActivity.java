@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -20,8 +20,8 @@ import com.example.kucingputeh.remote.UpdatePassengerProfile;
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView imgProfile;
-    private EditText etName, etEmail, etPhone;
-    private Button btnUpdate, btnLogout;
+    private TextView tvName, tvEmail, tvPhone;
+    private Button btnEditProfile, btnLogout;
     private SharedPrefManager spm;
 
     private ActivityResultLauncher<String> imagePickerLauncher;
@@ -34,19 +34,19 @@ public class ProfileActivity extends AppCompatActivity {
         spm = new SharedPrefManager(this);
 
         imgProfile = findViewById(R.id.imgProfile);
-        etName = findViewById(R.id.etName);
-        etEmail = findViewById(R.id.etEmail);
-        etPhone = findViewById(R.id.etPhone);
+        tvName = findViewById(R.id.tvName);
+        tvEmail = findViewById(R.id.tvEmail);
+        tvPhone = findViewById(R.id.tvPhone);
 
-        btnUpdate = findViewById(R.id.btnUpdate);
+        btnEditProfile = findViewById(R.id.btnEditProfile);
         btnLogout = findViewById(R.id.btnLogout);
 
         User user = spm.getUser();
 
         if (user != null) {
-            etName.setText(user.getUsername());
-            etEmail.setText(user.getEmail());
-            etPhone.setText(user.getPhone());
+            tvName.setText(user.getUsername());
+            tvEmail.setText(user.getEmail());
+            tvPhone.setText(user.getPhone());
         }
 
         imagePickerLauncher = registerForActivityResult(
@@ -62,20 +62,8 @@ public class ProfileActivity extends AppCompatActivity {
             imagePickerLauncher.launch("image/*");
         });
 
-        btnUpdate.setOnClickListener(v -> {
-
-            User currentUser = spm.getUser();
-
-            if (currentUser != null &&
-                    currentUser.getRole() != null &&
-                    currentUser.getRole().equalsIgnoreCase("driver")) {
-
-                startActivity(new Intent(ProfileActivity.this, UpdateDriverProfile.class));
-
-            } else {
-
-                startActivity(new Intent(ProfileActivity.this, UpdatePassengerProfile.class));
-            }
+        btnEditProfile.setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, EditProfileChoiceActivity.class));
         });
 
         btnLogout.setOnClickListener(v -> {
