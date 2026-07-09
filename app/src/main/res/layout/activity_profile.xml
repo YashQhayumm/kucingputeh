@@ -22,42 +22,42 @@
             android:scaleType="centerCrop" />
 
         <!-- Full Name -->
-        <TextView
-            android:id="@+id/tvName"
+        <EditText
+            android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:padding="10dp"
-            android:textSize="18sp"
-            android:text="Name" />
+            android:hint="Full_name"
+            android:inputType="textPersonName"
+            android:autofillHints="name" />
 
         <!-- Email -->
-        <TextView
-            android:id="@+id/tvEmail"
+        <EditText
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:textSize="18sp"
-            android:text="Email" />
+            android:hint="email"
+            android:inputType="textEmailAddress"
+            android:autofillHints="emailAddress" />
 
         <!-- Phone Number -->
-        <TextView
-            android:id="@+id/tvPhone"
+        <EditText
+            android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:textSize="18sp"
-            android:text="Phone Number" />
+            android:hint="phone number"
+            android:inputType="phone"
+            android:autofillHints="phone" />
 
         <!-- Update Profile -->
         <Button
-            android:id="@+id/btnEditProfile"
+            android:id="@+id/btnUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Edit Profile"
+            android:text="Update Profile"
             android:backgroundTint="#1E4FA1"
             android:textColor="@android:color/white" />
 
