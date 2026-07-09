@@ -24,8 +24,10 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Initialize Shared Preferences
         spm = new SharedPrefManager(this);
 
+        // Initialize Views
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
         etPhone = findViewById(R.id.etPhone);
@@ -33,6 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btnUpdate);
         btnLogout = findViewById(R.id.btnLogout);
 
+        // Load logged-in user information
         User user = spm.getUser();
 
         if (user != null) {
@@ -41,27 +44,35 @@ public class ProfileActivity extends AppCompatActivity {
             etPhone.setText(user.getPhone());
         }
 
+        // Open the correct update profile page
         btnUpdate.setOnClickListener(v -> {
 
-            if (user != null &&
-                    user.getRole() != null &&
-                    user.getRole().equalsIgnoreCase("driver")) {
+            User currentUser = spm.getUser();
 
-                Intent intent = new Intent(ProfileActivity.this, UpdateDriverProfile.class);
-                startActivity(intent);
+            if (currentUser != null &&
+                    currentUser.getRole() != null &&
+                    currentUser.getRole().equalsIgnoreCase("driver")) {
+
+                startActivity(new Intent(ProfileActivity.this,
+                        UpdateDriverProfile.class));
 
             } else {
-                Intent intent = new Intent(ProfileActivity.this, UpdatePassengerProfile.class);
-                startActivity(intent);
+
+                startActivity(new Intent(ProfileActivity.this,
+                        UpdatePassengerProfile.class));
             }
         });
 
+        // Logout
         btnLogout.setOnClickListener(v -> {
 
             spm.logout();
 
-            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            Intent intent = new Intent(ProfileActivity.this,
+                    LoginActivity.class);
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             startActivity(intent);
             finish();
