@@ -10,11 +10,11 @@ import retrofit2.http.Query;
 
 public interface ChatService {
 
-
     @GET("chats")
     Call<ResponseBody> getMessages(
             @Query("sender_id") int senderId,
-            @Query("receiver_id") int receiverId
+            @Query("receiver_id") int receiverId,
+            @Query("ride_id") int rideId
     );
 
     @FormUrlEncoded
@@ -22,6 +22,7 @@ public interface ChatService {
     Call<ResponseBody> sendMessage(
             @Field("sender_id") int senderId,
             @Field("receiver_id") int receiverId,
-            @Field("message") String message
+            @Field("message") String message,
+            @Field("ride_id") int rideId
     );
 }

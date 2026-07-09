@@ -46,41 +46,35 @@ public class ChatActivity extends AppCompatActivity {
         btnSend = findViewById(R.id.btnSend);
         scrollChat = findViewById(R.id.scrollChat);
 
-        // Hide spinners since we are context-aware now
         if (findViewById(R.id.spinnerFrom) != null) findViewById(R.id.spinnerFrom).setVisibility(View.GONE);
         if (findViewById(R.id.spinnerTo) != null) findViewById(R.id.spinnerTo).setVisibility(View.GONE);
 
         rideId = getIntent().getIntExtra("RIDE_ID", -1);
         passengerId = getIntent().getIntExtra("PASSENGER_ID", -1);
 
-        // Fixed: Instantiate using standard constructor 'new'
+        // Fixed: No getInstance
         myUserId = new SharedPrefManager(this).getUser().getId();
 
-        // FAILSAFE: If PASSENGER_ID wasn't passed down, or if you are the passenger,
-        // set the receiver to the DRIVER_ID. Otherwise, you are the driver, so talk to the passenger.
         if (myUserId == passengerId || passengerId == -1) {
-            receiverId = getIntent().getIntExtra("DRIVER_ID", 2); // Defaults to user 2 if intent is completely empty
+            receiverId = getIntent().getIntExtra("DRIVER_ID", 2);
         } else {
             receiverId = passengerId;
         }
 
-        // Quick debug check to see what IDs your app is sending to the DB
-        Log.d("CHAT_DEBUG_IDS", "Sender ID: " + myUserId + " | Receiver ID: " + receiverId);
-
         btnSend.setOnClickListener(v -> sendMessage());
 
-        // Load all older messages straight out of the database on launch
         loadMessages();
     }
 
     private void loadMessages() {
         ChatService chatService = ApiUtils.getChatService();
-        chatService.getMessages(myUserId, receiverId).enqueue(new Callback<ResponseBody>() {
+        // Added rideId parameter
+        chatService.getMessages(myUserId, receiverId, rideId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        chatContainer.removeAllViews(); // Clear view before loading
+                        chatContainer.removeAllViews();
                         String jsonResponse = response.body().string();
                         JSONArray jsonArray = new JSONArray(jsonResponse);
 
@@ -121,13 +115,12 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-        // Send to Live Production Database
         ChatService chatService = ApiUtils.getChatService();
-        chatService.sendMessage(myUserId, receiverId, message).enqueue(new Callback<ResponseBody>() {
+        // Added rideId parameter
+        chatService.sendMessage(myUserId, receiverId, message, rideId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    // Locally update UI since DB processed it successfully
                     TextView tvMessage = new TextView(ChatActivity.this);
                     tvMessage.setText("Me: " + message);
                     tvMessage.setTextSize(16);
