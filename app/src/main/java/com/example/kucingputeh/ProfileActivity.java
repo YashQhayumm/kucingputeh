@@ -15,7 +15,7 @@ import com.example.kucingputeh.remote.UpdatePassengerProfile;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private EditText etName, etStudentID, etEmail, etPassword;
+    private EditText etName, etEmail, etPhone;
     private Button btnUpdate, btnLogout;
     private SharedPrefManager spm;
 
@@ -24,59 +24,44 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Initialize Shared Preferences
         spm = new SharedPrefManager(this);
 
-        // Initialize Views
         etName = findViewById(R.id.etName);
-        etStudentID = findViewById(R.id.etStudentID);
         etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
+        etPhone = findViewById(R.id.etPhone);
 
         btnUpdate = findViewById(R.id.btnUpdate);
         btnLogout = findViewById(R.id.btnLogout);
 
-        // Load logged-in user information
         User user = spm.getUser();
 
         if (user != null) {
             etName.setText(user.getUsername());
             etEmail.setText(user.getEmail());
-
-            // Your SharedPrefManager doesn't store these yet,
-            // so leave them empty for now.
-            etStudentID.setText("");
-            etPassword.setText("");
+            etPhone.setText(user.getPhone());
         }
 
-        // Open Update Profile page based on role
         btnUpdate.setOnClickListener(v -> {
 
-            if (user.getRole() != null &&
+            if (user != null &&
+                    user.getRole() != null &&
                     user.getRole().equalsIgnoreCase("driver")) {
 
-                Intent intent = new Intent(ProfileActivity.this,
-                        UpdateDriverProfile.class);
+                Intent intent = new Intent(ProfileActivity.this, UpdateDriverProfile.class);
                 startActivity(intent);
 
             } else {
-
-                Intent intent = new Intent(ProfileActivity.this,
-                        UpdatePassengerProfile.class);
+                Intent intent = new Intent(ProfileActivity.this, UpdatePassengerProfile.class);
                 startActivity(intent);
             }
         });
 
-        // Logout
         btnLogout.setOnClickListener(v -> {
 
             spm.logout();
 
-            Intent intent = new Intent(ProfileActivity.this,
-                    LoginActivity.class);
-
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             startActivity(intent);
             finish();
