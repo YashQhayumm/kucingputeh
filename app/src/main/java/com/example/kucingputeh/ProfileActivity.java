@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.LoginActivity;
 import com.example.kucingputeh.remote.SharedPrefManager;
 
@@ -31,6 +32,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         btnUpdate = findViewById(R.id.btnUpdate);
         btnLogout = findViewById(R.id.btnLogout);
+
+        User user = spm.getUser();
+
+        etName.setText(user.getUsername());
+        etEmail.setText(user.getEmail());
 
         btnUpdate.setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
