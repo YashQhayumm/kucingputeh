@@ -35,7 +35,7 @@ public class ViewAvailableRidesActivity extends AppCompatActivity {
     private TextView tvEmptyRides;
     private EditText etSearchDestination;
     private Button btnRefreshRides;
-    private Button btnGoToBookings;
+    private Button btnViewMyRides;
 
     private RideAdapter adapter;
     private RideService rideService;
@@ -53,13 +53,11 @@ public class ViewAvailableRidesActivity extends AppCompatActivity {
         tvEmptyRides = findViewById(R.id.tvEmptyRides);
         etSearchDestination = findViewById(R.id.etSearchDestination);
         btnRefreshRides = findViewById(R.id.btnRefreshRides);
-        btnGoToBookings = findViewById(R.id.btnGoToBookings);
+        btnViewMyRides = findViewById(R.id.btnViewMyRides);
 
         btnRefreshRides.setOnClickListener(v -> fetchAvailableRides());
-        btnGoToBookings.setOnClickListener(v -> {
-            Intent intent = new Intent(ViewAvailableRidesActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
+        btnViewMyRides.setOnClickListener(v ->
+                startActivity(new Intent(ViewAvailableRidesActivity.this, ViewMyRidesActivity.class)));
 
         rvRides.setLayoutManager(new LinearLayoutManager(this));
         adapter = new RideAdapter(rideList, this::openBookRideScreen);

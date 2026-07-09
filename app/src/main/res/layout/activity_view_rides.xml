@@ -17,29 +17,29 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="             Available Rides"
+            android:text="Available Rides"
             android:textColor="#212121"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <Button
             android:id="@+id/btnRefreshRides"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
             android:text="Refresh"
             android:backgroundTint="#061369"
             android:textColor="#FFFFFF"/>
 
-        <Button
-            android:id="@+id/btnGoToBookings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="My Bookings"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#FFFFFF"/>
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnViewMyRides"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View My Rides"
+        android:backgroundTint="#061369"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="12dp"/>
 
     <EditText
         android:id="@+id/etSearchDestination"
