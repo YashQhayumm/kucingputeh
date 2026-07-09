@@ -19,6 +19,7 @@ import com.example.kucingputeh.model.Ride;
 import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.RideService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -77,14 +78,24 @@ public class ViewAvailableRidesActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<List<Ride>> call, @NonNull Response<List<Ride>> response) {
                 allRides.clear();
                 if (response.isSuccessful() && response.body() != null) {
-                    for (Ride ride : response.body()) {
-                        // Only show rides that still have seats free
-                        if (ride.getAvailableSeats() > 0) {
-                            allRides.add(ride);
-                        }
+                    List<Ride> fetchedRides = response.body();
+                    Log.d("VIEW_RIDES", "Received " + fetchedRides.size() + " rides");
+                    for (Ride ride : fetchedRides) {
+                        // Check data in logs to be sure
+                        Log.d("VIEW_RIDES", "Ride ID: " + ride.getRideId() + ", Destination: " + ride.getDestination());
+                        allRides.add(ride);
                     }
                 } else {
-                    Log.e("VIEW_RIDES", "Server returned code: " + response.code());
+                    String errorMsg = "Server Error: " + response.code();
+                    try {
+                        if (response.errorBody() != null) {
+                            errorMsg += "\n" + response.errorBody().string();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("VIEW_RIDES", errorMsg);
+                    Toast.makeText(ViewAvailableRidesActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }
                 filterRides(etSearchDestination.getText().toString());
             }
@@ -102,7 +113,8 @@ public class ViewAvailableRidesActivity extends AppCompatActivity {
         String q = query == null ? "" : query.trim().toLowerCase(Locale.getDefault());
 
         for (Ride ride : allRides) {
-            if (q.isEmpty() || ride.getDestination().toLowerCase(Locale.getDefault()).contains(q)) {
+            String dest = ride.getDestination();
+            if (q.isEmpty() || (dest != null && dest.toLowerCase(Locale.getDefault()).contains(q))) {
                 rideList.add(ride);
             }
         }
