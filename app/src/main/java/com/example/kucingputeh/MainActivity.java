@@ -69,11 +69,10 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
         }
 
-        View btnChat = findViewById(R.id.btnChat);
-        if (btnChat != null) {
-            btnChat.setOnClickListener(v ->
-                    startActivity(new Intent(MainActivity.this, ChatActivity.class)));
-        }
+        // View btnChat = findViewById(R.id.btnChat);
+        //if (btnChat != null) {
+          //  btnChat.setOnClickListener(v ->
+            //        startActivity(new Intent(MainActivity.this, ChatActivity.class)));}
 
         View btnProfile = findViewById(R.id.btnProfile);
         if (btnProfile != null) {
