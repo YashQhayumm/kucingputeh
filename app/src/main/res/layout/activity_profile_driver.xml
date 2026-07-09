@@ -135,7 +135,7 @@
             android:textColorHint="#A0A0A0" />
 
         <Button
-            android:id="@+id/btnUpdatePassengerProfile"
+            android:id="@+id/btnUpdateDriverProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#061369"
