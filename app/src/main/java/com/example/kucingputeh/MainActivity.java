@@ -3,6 +3,8 @@ package com.example.kucingputeh;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,20 +49,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // 1. TUKAR DI SINI kepada layout file 'Home' anda
+        setContentView(R.layout.activity_main);
+
         spm = new SharedPrefManager(getApplicationContext());
 
+        // 2. Komen/Buang bahagian redirect auto-login ni supaya tak lari ke Login screen masa mula
+        /*
         if (!spm.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
+        */
 
-        setContentView(R.layout.activity_booking_list);
+        // 3. Butang Login (Ke LoginActivity)
+        Button btnLogin = findViewById(R.id.btnGoToLogin);
+        if (btnLogin != null) {
+            btnLogin.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            });
+        }
 
-        rvBookings = findViewById(R.id.rvBookings);
-        rvBookings.setLayoutManager(new LinearLayoutManager(this));
-
-        // Setup Buttons
+        // 4. Setup Butang-butang lain
         findViewById(R.id.btnFindRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
 
@@ -78,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.btnUpdatePassengerProfile).setOnClickListener(v -> {
             User user = spm.getUser();
-
             if (user != null) {
                 if ("driver".equalsIgnoreCase(user.getRole())) {
                     startActivity(new Intent(MainActivity.this, UpdateDriverProfile.class));
@@ -88,13 +99,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Initialize Data
-        bookingList = new ArrayList<>();
-        bookingService = ApiUtils.getBookingService();
+        // 5. Setup data (hanya jalan kalau user dah login)
+        rvBookings = findViewById(R.id.rvBookings);
+        if (rvBookings != null) {
+            rvBookings.setLayoutManager(new LinearLayoutManager(this));
+            bookingList = new ArrayList<>();
+            bookingService = ApiUtils.getBookingService();
 
-        User user = spm.getUser();
-        if (user != null) {
-            fetchUserBookings(user.getId());
+            User user = spm.getUser();
+            if (user != null) {
+                fetchUserBookings(user.getId());
+            }
         }
     }
 
@@ -136,9 +151,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void clearUIAndShowEmpty() {
-        bookingList.clear();
-        adapter = new BookingAdapter(bookingList);
-        rvBookings.setAdapter(adapter);
-        Toast.makeText(MainActivity.this, "No active bookings found.", Toast.LENGTH_SHORT).show();
+        if (bookingList != null) {
+            bookingList.clear();
+            adapter = new BookingAdapter(bookingList);
+            rvBookings.setAdapter(adapter);
+        }
     }
 }
