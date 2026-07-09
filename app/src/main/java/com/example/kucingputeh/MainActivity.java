@@ -18,8 +18,6 @@ import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
 import com.example.kucingputeh.remote.LoginActivity;
 import com.example.kucingputeh.remote.SharedPrefManager;
-import com.example.kucingputeh.remote.UpdateDriverProfile;
-import com.example.kucingputeh.remote.UpdatePassengerProfile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -47,22 +45,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // 1. TUKAR DI SINI kepada layout file 'Home' anda
         setContentView(R.layout.activity_homepage);
 
         spm = new SharedPrefManager(getApplicationContext());
 
-        // 2. Komen/Buang bahagian redirect auto-login ni supaya tak lari ke Login screen masa mula
-        /*
-        if (!spm.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return;
-        }
-        */
-
-        // 3. Butang Login (Ke LoginActivity)
+        // Login Button
         Button btnLogin = findViewById(R.id.btnGoToLogin);
         if (btnLogin != null) {
             btnLogin.setOnClickListener(v -> {
@@ -71,41 +58,37 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        // 4. Setup Butang-butang lain
+        // Find Rides
         findViewById(R.id.btnFindRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
 
+        // Create Ride
         findViewById(R.id.btnCreateRide).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, CreateRideActivity.class)));
 
+        // My Rides
         findViewById(R.id.btnMyRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
 
+        // Chat
         findViewById(R.id.btnChat).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ChatActivity.class)));
 
+        // Profile
         findViewById(R.id.btnProfile).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
 
-        findViewById(R.id.btnUpdatePassengerProfile).setOnClickListener(v -> {
-            User user = spm.getUser();
-            if (user != null) {
-                if ("driver".equalsIgnoreCase(user.getRole())) {
-                    startActivity(new Intent(MainActivity.this, UpdateDriverProfile.class));
-                } else {
-                    startActivity(new Intent(MainActivity.this, UpdatePassengerProfile.class));
-                }
-            }
-        });
-
-        // 5. Setup data (hanya jalan kalau user dah login)
+        // Load Booking List
         rvBookings = findViewById(R.id.rvBookings);
+
         if (rvBookings != null) {
             rvBookings.setLayoutManager(new LinearLayoutManager(this));
+
             bookingList = new ArrayList<>();
             bookingService = ApiUtils.getBookingService();
 
             User user = spm.getUser();
+
             if (user != null) {
                 fetchUserBookings(user.getId());
             }
@@ -113,47 +96,79 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchUserBookings(int passengerId) {
+
         Map<String, String> filters = new HashMap<>();
         filters.put("passenger_id", String.valueOf(passengerId));
 
         bookingService.viewBookings(filters).enqueue(new Callback<ResponseBody>() {
+
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null && response.code() != 204) {
+            public void onResponse(@NonNull Call<ResponseBody> call,
+                                   @NonNull Response<ResponseBody> response) {
+
+                if (response.isSuccessful() &&
+                        response.body() != null &&
+                        response.code() != 204) {
+
                     try {
+
                         String jsonResponse = response.body().string();
+
                         Gson gson = new Gson();
                         Type listType = new TypeToken<List<Booking>>() {}.getType();
-                        List<Booking> fetchedBookings = gson.fromJson(jsonResponse, listType);
+
+                        List<Booking> fetchedBookings =
+                                gson.fromJson(jsonResponse, listType);
 
                         bookingList.clear();
-                        if (fetchedBookings != null && !fetchedBookings.isEmpty()) {
+
+                        if (fetchedBookings != null &&
+                                !fetchedBookings.isEmpty()) {
+
                             bookingList.addAll(fetchedBookings);
+
                             adapter = new BookingAdapter(bookingList);
                             rvBookings.setAdapter(adapter);
+
                         } else {
+
                             clearUIAndShowEmpty();
+
                         }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                 } else {
+
                     clearUIAndShowEmpty();
+
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Toast.makeText(MainActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            public void onFailure(@NonNull Call<ResponseBody> call,
+                                  @NonNull Throwable t) {
+
+                Toast.makeText(MainActivity.this,
+                        "Network Error: " + t.getMessage(),
+                        Toast.LENGTH_LONG).show();
+
             }
         });
     }
 
     private void clearUIAndShowEmpty() {
+
         if (bookingList != null) {
+
             bookingList.clear();
+
             adapter = new BookingAdapter(bookingList);
+
             rvBookings.setAdapter(adapter);
+
         }
     }
 }
