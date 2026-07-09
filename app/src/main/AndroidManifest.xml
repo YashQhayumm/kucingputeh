@@ -41,6 +41,7 @@
         <activity
             android:name=".ViewMyRidesActivity"
             android:exported="false" />
+        <activity android:name=".ProfileActivity" />
     </application>
 
 </manifest>
