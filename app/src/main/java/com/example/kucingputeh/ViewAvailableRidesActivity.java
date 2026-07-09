@@ -113,8 +113,12 @@ public class ViewAvailableRidesActivity extends AppCompatActivity {
         String q = query == null ? "" : query.trim().toLowerCase(Locale.getDefault());
 
         for (Ride ride : allRides) {
+            String origin = ride.getOrigin();
             String dest = ride.getDestination();
-            if (q.isEmpty() || (dest != null && dest.toLowerCase(Locale.getDefault()).contains(q))) {
+            boolean matchesOrigin = origin != null && origin.toLowerCase(Locale.getDefault()).contains(q);
+            boolean matchesDest = dest != null && dest.toLowerCase(Locale.getDefault()).contains(q);
+
+            if (q.isEmpty() || matchesOrigin || matchesDest) {
                 rideList.add(ride);
             }
         }

@@ -19,7 +19,7 @@
         android:id="@+id/etSearchDestination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search by destination"
+        android:hint="Search by origin or destination"
         android:inputType="text"
         android:padding="10dp"
         android:layout_marginBottom="12dp"
