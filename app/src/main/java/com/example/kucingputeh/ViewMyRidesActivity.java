@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kucingputeh.adapter.BookingAdapter;
 import com.example.kucingputeh.adapter.MyRideAdapter;
 import com.example.kucingputeh.model.Booking;
 import com.example.kucingputeh.model.Ride;
@@ -39,8 +40,15 @@ public class ViewMyRidesActivity extends AppCompatActivity {
     private RecyclerView rvMyRides;
     private TextView tvEmptyMyRides;
 
-    private MyRideAdapter adapter;
+    // Driver view: rides this driver created
+    private MyRideAdapter rideAdapter;
     private final List<Ride> myRideList = new ArrayList<>();
+
+    // Passenger/user view: rides this user has booked
+    private BookingAdapter bookingAdapter;
+    private final List<Booking> myBookingList = new ArrayList<>();
+
+    private boolean isDriverView = false;
 
     private RideService rideService;
     private BookingService bookingService;
@@ -59,16 +67,32 @@ public class ViewMyRidesActivity extends AppCompatActivity {
         tvEmptyMyRides = findViewById(R.id.tvEmptyMyRides);
 
         rvMyRides.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MyRideAdapter(myRideList, this::showPassengersForRide);
-        rvMyRides.setAdapter(adapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         User user = spm.getUser();
-        if (user != null && user.getId() > 0) {
+        if (user == null || user.getId() <= 0) {
+            return;
+        }
+
+        isDriverView = user.getRole() != null && user.getRole().equalsIgnoreCase("driver");
+
+        if (isDriverView) {
+            tvEmptyMyRides.setText("You haven't created any rides yet.");
+            if (rideAdapter == null) {
+                rideAdapter = new MyRideAdapter(myRideList, this::showPassengersForRide);
+            }
+            rvMyRides.setAdapter(rideAdapter);
             fetchMyRides(user.getId());
+        } else {
+            tvEmptyMyRides.setText("You haven't booked any rides yet.");
+            if (bookingAdapter == null) {
+                bookingAdapter = new BookingAdapter(myBookingList);
+            }
+            rvMyRides.setAdapter(bookingAdapter);
+            fetchMyBookings(user.getId());
         }
     }
 
@@ -82,21 +106,58 @@ public class ViewMyRidesActivity extends AppCompatActivity {
                 } else {
                     Log.e("MY_RIDES", "Server returned code: " + response.code());
                 }
-                adapter.notifyDataSetChanged();
-                toggleEmptyState();
+                rideAdapter.notifyDataSetChanged();
+                toggleEmptyState(myRideList.isEmpty());
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Ride>> call, @NonNull Throwable t) {
                 Log.e("MY_RIDES", "Network error", t);
                 Toast.makeText(ViewMyRidesActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                toggleEmptyState();
+                toggleEmptyState(myRideList.isEmpty());
             }
         });
     }
 
-    private void toggleEmptyState() {
-        boolean isEmpty = myRideList.isEmpty();
+    // Fetches the rides this passenger/user has booked (not rides they created)
+    private void fetchMyBookings(int passengerId) {
+        Map<String, String> filters = new HashMap<>();
+        filters.put("passenger_id", String.valueOf(passengerId));
+
+        bookingService.viewBookings(filters).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                myBookingList.clear();
+                if (response.isSuccessful() && response.body() != null && response.code() != 204) {
+                    try {
+                        String json = response.body().string();
+                        Gson gson = new Gson();
+                        Type listType = new TypeToken<List<Booking>>() {}.getType();
+                        List<Booking> bookings = gson.fromJson(json, listType);
+                        if (bookings != null) {
+                            myBookingList.addAll(bookings);
+                        }
+                    } catch (IOException e) {
+                        Log.e("MY_RIDES", "Failed to parse bookings", e);
+                        Toast.makeText(ViewMyRidesActivity.this, "Failed to load your bookings.", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (response.code() != 204) {
+                    Log.e("MY_RIDES", "Server returned code: " + response.code());
+                }
+                bookingAdapter.notifyDataSetChanged();
+                toggleEmptyState(myBookingList.isEmpty());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.e("MY_RIDES", "Network error", t);
+                Toast.makeText(ViewMyRidesActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                toggleEmptyState(myBookingList.isEmpty());
+            }
+        });
+    }
+
+    private void toggleEmptyState(boolean isEmpty) {
         tvEmptyMyRides.setVisibility(isEmpty ? android.view.View.VISIBLE : android.view.View.GONE);
         rvMyRides.setVisibility(isEmpty ? android.view.View.GONE : android.view.View.VISIBLE);
     }

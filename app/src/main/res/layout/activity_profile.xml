@@ -18,64 +18,56 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:src="@drawable/najwa_pic"
-            android:contentDescription="Profile Picture"
-            android:scaleType="centerCrop"
-            android:clickable="true"
-            android:focusable="true" />
+            android:contentDescription="profile_picture"
+            android:scaleType="centerCrop" />
 
         <!-- Full Name -->
-        <EditText
-            android:id="@+id/etName"
+        <TextView
+            android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:hint="Full Name"
-            android:inputType="textPersonName" />
-
-        <!-- Student ID -->
-        <EditText
-            android:id="@+id/etStudentID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Student ID"
-            android:inputType="text" />
+            android:hint="Full_name"
+            android:textSize="18sp"
+            android:padding="8dp" />
 
         <!-- Email -->
-        <EditText
-            android:id="@+id/etEmail"
+        <TextView
+            android:id="@+id/tvEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:hint="email"
+            android:textSize="18sp"
+            android:padding="8dp" />
 
-        <!-- Password -->
-        <EditText
-            android:id="@+id/etPassword"
+        <!-- Phone Number -->
+        <TextView
+            android:id="@+id/tvPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Password"
-            android:inputType="textPassword" />
+            android:hint="phone number"
+            android:textSize="18sp"
+            android:padding="8dp" />
 
-        <!-- Save Button -->
+        <!-- Edit Profile -->
         <Button
-            android:id="@+id/btnSave"
+            android:id="@+id/btnEditProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Save Profile"
+            android:text="Edit Profile"
             android:backgroundTint="#1E4FA1"
             android:textColor="@android:color/white" />
 
-        <!-- Logout Button -->
+        <!-- Logout -->
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Logout"
+            android:text="logout"
             android:backgroundTint="#D32F2F"
             android:textColor="@android:color/white" />
 
