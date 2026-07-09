@@ -10,7 +10,6 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Profile Picture -->
         <ImageView
             android:id="@+id/imgProfile"
             android:layout_width="120dp"
@@ -19,11 +18,8 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/najwa_pic"
             android:contentDescription="Profile Picture"
-            android:scaleType="centerCrop"
-            android:clickable="true"
-            android:focusable="true" />
+            android:scaleType="centerCrop" />
 
-        <!-- Full Name -->
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
@@ -32,16 +28,6 @@
             android:hint="Full Name"
             android:inputType="textPersonName" />
 
-        <!-- Student ID -->
-        <EditText
-            android:id="@+id/etStudentID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Student ID"
-            android:inputType="text" />
-
-        <!-- Email -->
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
@@ -50,16 +36,14 @@
             android:hint="Email"
             android:inputType="textEmailAddress" />
 
-        <!-- Password -->
         <EditText
-            android:id="@+id/etPassword"
+            android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Password"
-            android:inputType="textPassword" />
+            android:hint="Phone Number"
+            android:inputType="phone" />
 
-        <!-- Save Button -->
         <Button
             android:id="@+id/btnUpdate"
             android:layout_width="match_parent"
@@ -69,7 +53,6 @@
             android:backgroundTint="#1E4FA1"
             android:textColor="@android:color/white" />
 
-        <!-- Logout Button -->
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
