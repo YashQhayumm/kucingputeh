@@ -10,7 +10,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.PATCH;
+
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -24,6 +24,10 @@ public interface RideService {
     // VIEW MY RIDES
     @GET("Rides")
     Call<List<Ride>> getRidesByDriver(@Query("driver_id") int driverId);
+
+    // GET A SINGLE RIDE (used to re-check available_seats right before booking)
+    @GET("Rides/{id}")
+    Call<Ride> getRideById(@Path("id") int rideId);
 
     // CREATE RIDE - Updated based on provided parameters
     @FormUrlEncoded
@@ -40,7 +44,7 @@ public interface RideService {
 
     // Update Available Seats
     @FormUrlEncoded
-    @PATCH("Rides/{id}")
+    @POST("Rides/{id}")
     Call<ResponseBody> updateAvailableSeats(
             @Path("id") int rideId,
             @Field("available_seats") int availableSeats

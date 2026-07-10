@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.kucingputeh.model.Ride;
 import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
@@ -99,21 +100,54 @@ public class BookRideActivity extends AppCompatActivity {
                 return;
             }
 
-            sendBookingToDatabase(currentPassengerId, currentRideId, seatsRequested);
+            btnConfirmBooking.setEnabled(false);
+            confirmSeatsThenBook(currentPassengerId, currentRideId, seatsRequested);
         });
     }
 
-    private void sendBookingToDatabase(int passengerId, int rideId, int seats) {
+    // Re-check the live seat count on the server right before booking, so two people
+    // booking at the same moment can't both succeed off a stale number shown on screen.
+    private void confirmSeatsThenBook(int passengerId, int rideId, int seatsRequested) {
+        rideService.getRideById(rideId).enqueue(new Callback<Ride>() {
+            @Override
+            public void onResponse(Call<Ride> call, Response<Ride> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int liveAvailableSeats = response.body().getAvailableSeats();
+                    if (seatsRequested > liveAvailableSeats) {
+                        btnConfirmBooking.setEnabled(true);
+                        currentAvailableSeats = liveAvailableSeats;
+                        Toast.makeText(BookRideActivity.this,
+                                "Only " + liveAvailableSeats + " seat(s) left now. Please adjust.",
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    sendBookingToDatabase(passengerId, rideId, seatsRequested, liveAvailableSeats);
+                } else {
+                    // Couldn't verify live seat count; fall back to the value we already have
+                    sendBookingToDatabase(passengerId, rideId, seatsRequested, currentAvailableSeats);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Ride> call, Throwable t) {
+                Log.e("NETWORK_ERROR", "Could not re-check seat count, using cached value", t);
+                sendBookingToDatabase(passengerId, rideId, seatsRequested, currentAvailableSeats);
+            }
+        });
+    }
+
+    private void sendBookingToDatabase(int passengerId, int rideId, int seats, int seatsBeforeBooking) {
         bookingService.bookRide(passengerId, rideId, seats).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(BookRideActivity.this, "Booking saved directly to database!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BookRideActivity.this, "Booking saved and seats updating...", Toast.LENGTH_LONG).show();
                     // Reduce the seats left on the ride to reflect this booking
-                    updateRemainingSeats(rideId, currentAvailableSeats - seats);
+                    updateRemainingSeats(rideId, seatsBeforeBooking - seats);
                 } else {
                     Log.e("DB_ERROR", "Server returned error code: " + response.code());
                     Toast.makeText(BookRideActivity.this, "Failed saving booking to server.", Toast.LENGTH_SHORT).show();
+                    btnConfirmBooking.setEnabled(true);
                 }
             }
 
@@ -121,6 +155,7 @@ public class BookRideActivity extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("NETWORK_ERROR", t.getMessage(), t);
                 Toast.makeText(BookRideActivity.this, "Network failure. Check your connection!", Toast.LENGTH_SHORT).show();
+                btnConfirmBooking.setEnabled(true);
             }
         });
     }
@@ -129,6 +164,19 @@ public class BookRideActivity extends AppCompatActivity {
         rideService.updateAvailableSeats(rideId, newSeatCount).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (!response.isSuccessful()) {
+                    String errorBody = "";
+                    try {
+                        if (response.errorBody() != null) {
+                            errorBody = response.errorBody().string();
+                        }
+                    } catch (Exception e) {
+                        errorBody = "(could not read error body)";
+                    }
+                    Log.e("DB_ERROR", "Failed to update available_seats. HTTP " + response.code() + " - " + errorBody);
+                } else {
+                    Log.d("DB_OK", "available_seats updated to " + newSeatCount + " for ride " + rideId);
+                }
                 // Whether or not this succeeds, the booking itself was already saved, so just return
                 finish();
             }
