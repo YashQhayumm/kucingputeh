@@ -16,13 +16,17 @@ import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.LoginActivity;
 import com.example.kucingputeh.remote.UserService;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
-//register part
+    //register part
     private EditText edtName, edtEmail, edtPassword, edtPlateNumber, edtVehicleModel, edtPhone;
     private RadioGroup rgRole;
     private Button btnRegister;
@@ -85,7 +89,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Hantar ke API
-        userService.registerUser(name, email, password, role, plate, model, phone)
+        // users is the auto-CRUD table route, so it stores whatever value it
+        // receives as-is -- hash the password client-side the same way we do
+        // for profile updates, to match the existing unsalted-MD5 scheme.
+        userService.registerUser(name, email, md5(password), role, plate, model, phone)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -103,5 +110,24 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    /**
+     * Matches the unsalted MD5 hashing scheme already used for the password
+     * column (visible in existing DB rows). The auto-CRUD "users" insert
+     * route stores the password field as-is, with no server-side hashing.
+     */
+    private static String md5(String input) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            byte[] hashBytes = digest.digest(input.getBytes("UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashBytes) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

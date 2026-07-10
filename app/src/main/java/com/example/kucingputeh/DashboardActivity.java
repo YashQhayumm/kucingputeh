@@ -52,15 +52,17 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         // Show/hide cards depending on the logged-in user's role.
-        // Admin: Find Rides, Create Ride, Bookings, Profile, Logout (no My Rides)
-        // User:  Find Rides, My Rides, Profile, Logout (no Create Ride / Bookings)
+        // Admin & Driver: Find Rides, Create Ride, Bookings, Profile, Logout (no My Rides)
+        // Passenger:      Find Rides, My Rides, Profile, Logout (no Create Ride / Bookings)
         User user = spm.getUser();
-        boolean isAdmin = user != null && user.getRole() != null
-                && user.getRole().equalsIgnoreCase("admin");
+        String role = (user != null) ? user.getRole() : null;
+        boolean isAdmin = role != null && role.equalsIgnoreCase("admin");
+        boolean isDriver = role != null && role.equalsIgnoreCase("driver");
+        boolean canManageRides = isAdmin || isDriver;
 
-        cardCreateRide.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
-        cardBookings.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
-        cardMyRides.setVisibility(isAdmin ? View.GONE : View.VISIBLE);
+        cardCreateRide.setVisibility(canManageRides ? View.VISIBLE : View.GONE);
+        cardBookings.setVisibility(canManageRides ? View.VISIBLE : View.GONE);
+        cardMyRides.setVisibility(canManageRides ? View.GONE : View.VISIBLE);
         // cardFindRides, cardProfile, and cardLogout stay visible for both roles.
     }
 }

@@ -22,18 +22,19 @@ public interface UserService {
             @Field("email") String email,
             @Field("password") String password
     );
-//
-        @FormUrlEncoded
-        @POST("users/register")
-        Call<ResponseBody> registerUser(
-
-                @Field("username") String username,
-                @Field("StudentID") String studentId,
-                @Field("email") String email,
-                @Field("password") String password,
-                @Field("role") String role,
-                @Field("plate_number") String plateNumber,
-                @Field("car_model") String vehicleModel
-        );
-    }
-
+    // Auto-CRUD insert route (POST <table_name>), same pattern as
+    // ChatService.sendMessage(). "users/register" was a custom route that
+    // doesn't exist on the server -- POST users creates a new row directly,
+    // the same way POST chats does for messages.
+    @FormUrlEncoded
+    @POST("users")
+    Call<ResponseBody> registerUser(
+            @Field("username") String username,
+            @Field("email") String email,
+            @Field("password") String password,
+            @Field("role") String role,
+            @Field("plate_number") String plateNumber,
+            @Field("car_model") String vehicleModel,
+            @Field("phone_number") String phone
+    );
+}
