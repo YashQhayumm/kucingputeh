@@ -25,7 +25,7 @@
                     android:id="@+id/imgProfile"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:src="@drawable/najwa_pic"
+                    android:src="@drawable/profileicon"
                     android:scaleType="centerCrop"
                     android:clickable="true"
                     android:focusable="true"
