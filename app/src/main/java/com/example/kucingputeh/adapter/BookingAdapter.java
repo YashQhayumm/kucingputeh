@@ -49,32 +49,71 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             v.getContext().startActivity(intent);
         });
 
-        // CANCEL BUTTON HERE 
+        // CANCEL BUTTON HERE
         holder.btnCancelBooking.setOnClickListener(v -> {
             int bookingIdToDelete = booking.getBookingId();
+            int rideId = booking.getRideId();
+            int seatsToReturn = booking.getSeatsBooked();
 
-            ApiUtils.getBookingService().cancelBooking(bookingIdToDelete).enqueue(new retrofit2.Callback<ResponseBody>() {
+            // 1. First get the current ride info to know how many seats are available NOW
+            ApiUtils.getRideService().getRideById(rideId).enqueue(new retrofit2.Callback<com.example.kucingputeh.model.Ride>() {
                 @Override
-                public void onResponse(@NonNull retrofit2.Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
-                    // REST delete operations typically return 200 OK or 204 No Content upon success
-                    if (response.isSuccessful()) {
-                        android.widget.Toast.makeText(v.getContext(), "Booking cancelled successfully!", android.widget.Toast.LENGTH_SHORT).show();
+                public void onResponse(@NonNull retrofit2.Call<com.example.kucingputeh.model.Ride> call, @NonNull retrofit2.Response<com.example.kucingputeh.model.Ride> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        int currentAvailable = response.body().getAvailableSeats();
+                        int newTotalSeats = currentAvailable + seatsToReturn;
 
-                        // Remove item from listdynamically
-                        bookingList.remove(position);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, bookingList.size());
+                        // 2. Now cancel the booking
+                        cancelBookingAndRefreshSeats(v, bookingIdToDelete, rideId, newTotalSeats, position);
                     } else {
-                        android.util.Log.e("CANCEL_FAILED", "Code: " + response.code());
-                        android.widget.Toast.makeText(v.getContext(), "Failed to cancel. Server code: " + response.code(), android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(v.getContext(), "Error fetching ride details", android.widget.Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
-                public void onFailure(@NonNull retrofit2.Call<ResponseBody> call, @NonNull Throwable t) {
+                public void onFailure(@NonNull retrofit2.Call<com.example.kucingputeh.model.Ride> call, @NonNull Throwable t) {
                     android.widget.Toast.makeText(v.getContext(), "Network Error: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
                 }
             });
+        });
+    }
+
+    private void cancelBookingAndRefreshSeats(View v, int bookingId, int rideId, int newSeats, int position) {
+        ApiUtils.getBookingService().cancelBooking(bookingId).enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull retrofit2.Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // 3. Finally update the seats back in the database
+                    ApiUtils.getRideService().updateAvailableSeats(rideId, newSeats).enqueue(new retrofit2.Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(@NonNull retrofit2.Call<ResponseBody> call, @NonNull retrofit2.Response<ResponseBody> response) {
+                            android.widget.Toast.makeText(v.getContext(), "Booking cancelled and seats restored!", android.widget.Toast.LENGTH_SHORT).show();
+
+                            // Remove item from list dynamically
+                            if (position < bookingList.size()) {
+                                bookingList.remove(position);
+                                notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, bookingList.size());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull retrofit2.Call<ResponseBody> call, @NonNull Throwable t) {
+                            android.util.Log.e("SEAT_UPDATE_FAIL", t.getMessage());
+                            // Even if seat update fails, the booking is gone from DB, so we remove from UI
+                            bookingList.remove(position);
+                            notifyDataSetChanged();
+                        }
+                    });
+                } else {
+                    android.widget.Toast.makeText(v.getContext(), "Failed to cancel booking", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull retrofit2.Call<ResponseBody> call, @NonNull Throwable t) {
+                android.widget.Toast.makeText(v.getContext(), "Network Error: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
