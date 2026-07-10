@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.kucingputeh.DashboardActivity;
 import com.example.kucingputeh.ProfileActivity;
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.RegisterActivity;
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                         finish();
 // login admin admin
                         Intent intent =
-                                new Intent(LoginActivity.this, ProfileActivity.class);
+                                new Intent(LoginActivity.this, DashboardActivity.class);
                         startActivity(intent);
 
                     } else {
