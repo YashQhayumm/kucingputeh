@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        */
+        *////
 
         Button btnLogin = findViewById(R.id.btnGoToLogin);
         if (btnLogin != null) {
