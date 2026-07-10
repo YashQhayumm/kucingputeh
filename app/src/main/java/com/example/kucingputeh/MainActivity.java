@@ -3,7 +3,6 @@ package com.example.kucingputeh;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,10 +15,7 @@ import com.example.kucingputeh.model.Booking;
 import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
-import com.example.kucingputeh.remote.LoginActivity;
 import com.example.kucingputeh.remote.SharedPrefManager;
-import com.example.kucingputeh.remote.UpdateDriverProfile;
-import com.example.kucingputeh.remote.UpdatePassengerProfile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,6 +31,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// This is the "Bookings" screen opened from the Dashboard's Bookings card
+// (for admin/driver). It was previously pointed at activity_homepage --
+// the pre-login welcome screen -- and referenced button IDs
+// (btnChatWithDriver, btnUpdatePassengerProfile) that don't exist in that
+// layout, which crashed onCreate() and dropped the user back to the
+// welcome/login screen. Fixed to use activity_booking_list, which actually
+// has the views this activity needs.
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rvBookings;
@@ -48,27 +51,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_homepage);
+        setContentView(R.layout.activity_booking_list);
 
         spm = new SharedPrefManager(getApplicationContext());
-
-        // 2. Komen/Buang bahagian redirect auto-login ni supaya tak lari ke Login screen masa mula
-        /*
-        if (!spm.isLoggedIn()) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-            return;
-        }
-        *////
-
-        Button btnLogin = findViewById(R.id.btnGoToLogin);
-        if (btnLogin != null) {
-            btnLogin.setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-            });
-        }
-
 
         findViewById(R.id.btnFindRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
@@ -79,42 +64,32 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnMyRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
 
-        findViewById(R.id.btnChatWithDriver).setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, ChatActivity.class)));
-
         findViewById(R.id.btnProfile).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
 
-        findViewById(R.id.btnUpdatePassengerProfile).setOnClickListener(v -> {
-            User user = spm.getUser();
-            if (user != null) {
-                if ("driver".equalsIgnoreCase(user.getRole())) {
-                    startActivity(new Intent(MainActivity.this, UpdateDriverProfile.class));
-                } else {
-                    startActivity(new Intent(MainActivity.this, UpdatePassengerProfile.class));
-                }
-            }
-        });
-
-
-
         rvBookings = findViewById(R.id.rvBookings);
-        if (rvBookings != null) {
-            rvBookings.setLayoutManager(new LinearLayoutManager(this));
-            bookingList = new ArrayList<>();
-            bookingService = ApiUtils.getBookingService();
+        rvBookings.setLayoutManager(new LinearLayoutManager(this));
+        bookingList = new ArrayList<>();
+        bookingService = ApiUtils.getBookingService();
 
-            User user = spm.getUser();
-            if (user != null) {
-                fetchUserBookings(user.getId());
+        User user = spm.getUser();
+        if (user != null) {
+            boolean isAdmin = user.getRole() != null && user.getRole().equalsIgnoreCase("admin");
+            boolean isDriver = user.getRole() != null && user.getRole().equalsIgnoreCase("driver");
+
+            if (isAdmin || isDriver) {
+                // Admin/driver Bookings view: show all bookings, not just
+                // the current user's own passenger bookings.
+                fetchBookings(new HashMap<>());
+            } else {
+                Map<String, String> filters = new HashMap<>();
+                filters.put("passenger_id", String.valueOf(user.getId()));
+                fetchBookings(filters);
             }
         }
     }
 
-    private void fetchUserBookings(int passengerId) {
-        Map<String, String> filters = new HashMap<>();
-        filters.put("passenger_id", String.valueOf(passengerId));
-
+    private void fetchBookings(Map<String, String> filters) {
         bookingService.viewBookings(filters).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
