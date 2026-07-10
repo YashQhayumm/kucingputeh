@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Inisialisasi View
+        // initialize
 
         edtName = findViewById(R.id.edtName);
         edstuID = findViewById(R.id.edstuID);
@@ -48,9 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         rgRole = findViewById(R.id.rgRole);
         btnRegister = findViewById(R.id.btnRegister);
 
-
         layoutDriverFields = findViewById(R.id.layoutDriverFields);
-
         rgRole.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rbDriver) {
                 layoutDriverFields.setVisibility(View.VISIBLE);
@@ -62,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         userService = ApiUtils.getUserService();
         btnRegister.setOnClickListener(v -> performRegister());
     }
+
     private void performRegister() {
         String name = edtName.getText().toString().trim();
         String studentId = edstuID.getText().toString().trim();

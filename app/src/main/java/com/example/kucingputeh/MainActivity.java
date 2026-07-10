@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnMyRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
 
-        findViewById(R.id.btnChat).setOnClickListener(v ->
+        findViewById(R.id.btnChatWithDriver).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ChatActivity.class)));
 
         findViewById(R.id.btnProfile).setOnClickListener(v ->
