@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                         spm.storeUser(user);
 //2pm 9.7
                         finish();
-// 2 lebih commit
+// login admin admin
                         Intent intent =
                                 new Intent(LoginActivity.this, ProfileActivity.class);
                         startActivity(intent);

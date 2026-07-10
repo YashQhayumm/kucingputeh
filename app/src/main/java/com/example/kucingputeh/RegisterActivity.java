@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
-
+//register part
     private EditText edtName, edstuID, edtEmail, edtPassword, edtPlateNumber, edtVehicleModel, edtPhone;
     private RadioGroup rgRole;
     private Button btnRegister;
