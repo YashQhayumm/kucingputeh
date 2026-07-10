@@ -1,5 +1,7 @@
 package com.example.kucingputeh.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
     private int id;
     private String email;
@@ -10,8 +12,14 @@ public class User {
     private String role;
     private int is_active;
     private String secret;
+
+    @SerializedName("phone_number")
     private String phone;
+
+    @SerializedName("plate_number")
     private String plateNumber;
+
+    @SerializedName("car_model")
     private String vehicleModel;
 
 
