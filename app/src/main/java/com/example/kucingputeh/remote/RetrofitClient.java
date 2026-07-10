@@ -15,7 +15,7 @@ public class RetrofitClient {
                     .addInterceptor(chain -> {
                         Request original = chain.request();
                         Request.Builder requestBuilder = original.newBuilder()
-                                .header("api_key", "bae35625-e30c-48b8-b15c-cc3bf93f31af")
+                                .header("api_key", "1f8379ff-6a61-4d75-953a-b7c713962fec")
                                 .method(original.method(), original.body());
                         return chain.proceed(requestBuilder.build());
                     })
