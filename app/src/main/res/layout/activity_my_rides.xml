@@ -1,63 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_marginBottom="16dp"
+        android:text="My Booking"
+        android:textAlignment="center"
+        android:textColor="#212121"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvRoute"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="UiTM Jasin ➔ Melaka Sentral"
-            android:textColor="#212121"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tvEmptyMyRides"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You haven't created any rides yet."
+        android:textColor="#757575"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:padding="24dp"
+        android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/tvDepartureTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Departure: 2026-07-10 14:00:00"
-            android:textColor="#757575"
-            android:textSize="14sp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMyRides"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/tvAvailableSeats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Available Seats: 3"
-            android:textColor="#757575"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btnViewOnMap"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#00897B"
-            android:text="View on Map"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/btnViewPassengers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="#061369"
-            android:text="View Passengers"
-            android:textColor="#FFFFFF" />
-
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+</LinearLayout>
