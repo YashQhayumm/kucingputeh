@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.model.Ride;
+import com.example.kucingputeh.util.MapUtils;
 
 import java.util.List;
 
@@ -54,6 +55,9 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
         holder.btnBookRide.setOnClickListener(v -> {
             if (listener != null) listener.onBookClick(ride);
         });
+
+        holder.btnViewOnMap.setOnClickListener(v ->
+                MapUtils.openRouteOnMap(v.getContext(), ride.getOrigin(), ride.getDestination()));
     }
 
     @Override
@@ -63,7 +67,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
 
     public static class RideViewHolder extends RecyclerView.ViewHolder {
         TextView tvRoute, tvDepartureTime, tvAvailableSeats;
-        Button btnBookRide;
+        Button btnBookRide, btnViewOnMap;
 
         public RideViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,6 +75,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
             tvDepartureTime = itemView.findViewById(R.id.tvDepartureTime);
             tvAvailableSeats = itemView.findViewById(R.id.tvAvailableSeats);
             btnBookRide = itemView.findViewById(R.id.btnBookRide);
+            btnViewOnMap = itemView.findViewById(R.id.btnViewOnMap);
         }
     }
 }

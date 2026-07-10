@@ -15,6 +15,7 @@ import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
 import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.remote.RideService;
+import com.example.kucingputeh.util.MapUtils;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -33,6 +34,7 @@ public class BookRideActivity extends AppCompatActivity {
     private TextView tvSelectedRide;
     private EditText etSeats;
     private Button btnConfirmBooking;
+    private Button btnViewOnMap;
 
     private BookingService bookingService;
     private RideService rideService;
@@ -55,6 +57,7 @@ public class BookRideActivity extends AppCompatActivity {
         tvSelectedRide = findViewById(R.id.tvSelectedRide);
         etSeats = findViewById(R.id.etSeats);
         btnConfirmBooking = findViewById(R.id.btnConfirmBooking);
+        btnViewOnMap = findViewById(R.id.btnViewOnMap);
 
         // Get the logged-in user's id so the booking is tied to the real account
         User user = spm.getUser();
@@ -75,6 +78,8 @@ public class BookRideActivity extends AppCompatActivity {
 
         tvSelectedRide.setText(origin + " ➔ " + destination + "\nDeparture: " + departureTime
                 + "\nSeats left: " + currentAvailableSeats);
+
+        btnViewOnMap.setOnClickListener(v -> MapUtils.openRouteOnMap(this, origin, destination));
 
         btnConfirmBooking.setOnClickListener(v -> {
             if (currentPassengerId == -1) {

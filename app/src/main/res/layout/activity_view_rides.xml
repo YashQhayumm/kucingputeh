@@ -36,7 +36,7 @@
         android:id="@+id/btnViewMyRides"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View My Rides"
+        android:text="View My Booking"
         android:backgroundTint="#061369"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="12dp"/>

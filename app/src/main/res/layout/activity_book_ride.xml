@@ -39,6 +39,15 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
 
+    <Button
+        android:id="@+id/btnViewOnMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Pickup &amp; Destination on Map"
+        android:backgroundTint="#00897B"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="24dp" />
+
     <EditText
         android:id="@+id/etSeats"
         android:layout_width="match_parent"

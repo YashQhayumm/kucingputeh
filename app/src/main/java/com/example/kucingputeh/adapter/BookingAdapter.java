@@ -14,6 +14,7 @@ import com.example.kucingputeh.ChatActivity;
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.model.Booking;
 import com.example.kucingputeh.remote.ApiUtils;
+import com.example.kucingputeh.util.MapUtils;
 
 import okhttp3.ResponseBody;
 import java.util.List;
@@ -40,6 +41,9 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         holder.tvRoute.setText(booking.getOrigin() + " ➔ " + booking.getDestination());
         holder.tvStatus.setText("Status: " + booking.getBookingStatus());
         holder.tvSeatsBooked.setText("Seats Secured: " + booking.getSeatsBooked());
+
+        holder.btnViewOnMap.setOnClickListener(v ->
+                MapUtils.openRouteOnMap(v.getContext(), booking.getOrigin(), booking.getDestination()));
 
         holder.btnChatWithDriver.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), ChatActivity.class);
@@ -124,7 +128,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
     public static class BookingViewHolder extends RecyclerView.ViewHolder {
         TextView tvRoute, tvDepartureTime, tvSeatsBooked, tvStatus;
-        Button btnCancelBooking, btnChatWithDriver;
+        Button btnCancelBooking, btnChatWithDriver, btnViewOnMap;
 
         public BookingViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -134,6 +138,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             tvStatus = itemView.findViewById(R.id.tvStatus);
             btnCancelBooking = itemView.findViewById(R.id.btnCancelBooking);
             btnChatWithDriver = itemView.findViewById(R.id.btnChatWithDriver);
+            btnViewOnMap = itemView.findViewById(R.id.btnViewOnMap);
         }
     }
 }

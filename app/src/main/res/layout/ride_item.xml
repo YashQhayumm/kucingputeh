@@ -42,6 +42,15 @@
             android:textSize="14sp" />
 
         <Button
+            android:id="@+id/btnViewOnMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#00897B"
+            android:text="View on Map"
+            android:textColor="#FFFFFF" />
+
+        <Button
             android:id="@+id/btnBookRide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
