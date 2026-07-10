@@ -23,7 +23,7 @@ import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 //register part
-    private EditText edtName, edstuID, edtEmail, edtPassword, edtPlateNumber, edtVehicleModel, edtPhone;
+    private EditText edtName, edtEmail, edtPassword, edtPlateNumber, edtVehicleModel, edtPhone;
     private RadioGroup rgRole;
     private Button btnRegister;
     private UserService userService;
@@ -39,7 +39,6 @@ public class RegisterActivity extends AppCompatActivity {
         // initialize
 
         edtName = findViewById(R.id.edtName);
-        edstuID = findViewById(R.id.edstuID);
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         edtPlateNumber = findViewById(R.id.edtPlateNumber);
@@ -63,7 +62,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void performRegister() {
         String name = edtName.getText().toString().trim();
-        String studentId = edstuID.getText().toString().trim();
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
         String phone = edtPhone.getText().toString().trim();
@@ -87,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Hantar ke API
-        userService.registerUser(name, studentId, email, password, role, plate, model, phone)
+        userService.registerUser(name, email, password, role, plate, model, phone)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
