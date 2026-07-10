@@ -22,7 +22,7 @@ public interface UserService {
             @Field("email") String email,
             @Field("password") String password
     );
-
+//
         @FormUrlEncoded
         @POST("users/register")
         Call<ResponseBody> registerUser(
@@ -33,8 +33,7 @@ public interface UserService {
                 @Field("password") String password,
                 @Field("role") String role,
                 @Field("plate_number") String plateNumber,
-                @Field("car_model") String vehicleModel,
-                @Field("phone") String phone
+                @Field("car_model") String vehicleModel
         );
     }
 
