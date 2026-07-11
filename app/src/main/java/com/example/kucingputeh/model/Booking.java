@@ -25,6 +25,9 @@ public class Booking {
         @SerializedName("RideID")
         private int rideId;
 
+        @SerializedName(value = "driver_id", alternate = {"DriverID", "driverId"})
+        private int driverId;
+
         @SerializedName("Origin")
         private String origin;
 
@@ -32,8 +35,13 @@ public class Booking {
         private String destination;
 
         public int getRideId() { return rideId; }
+        public int getDriverId() { return driverId; }
         public String getOrigin() { return origin; }
         public String getDestination() { return destination; }
+    }
+
+    public int getDriverId() {
+        return ride != null ? ride.getDriverId() : 0;
     }
 
     public int getRideId() {

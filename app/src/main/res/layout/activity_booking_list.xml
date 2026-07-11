@@ -34,7 +34,7 @@
         android:id="@+id/btnMyRides"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="My Rides"
+        android:text="My Rides / My Bookings"
         android:layout_marginBottom="8dp"/>
 
     <Button

@@ -41,6 +41,17 @@
             android:textColor="#757575"
             android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/tvDriverInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Driver ID: 1"
+            android:textColor="#455A64"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/btnViewOnMap"
             android:layout_width="match_parent"

@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
-import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.remote.RideService;
+import com.example.kucingputeh.remote.SharedPrefManager;
 
 import java.util.Calendar;
 import java.util.Locale;

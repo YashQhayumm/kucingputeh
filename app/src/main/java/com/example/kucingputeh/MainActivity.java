@@ -3,6 +3,7 @@ package com.example.kucingputeh;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -73,6 +74,17 @@ public class MainActivity extends AppCompatActivity {
         bookingService = ApiUtils.getBookingService();
 
         User user = spm.getUser();
+        Button btnMyRides = findViewById(R.id.btnMyRides);
+        if (user != null) {
+            String role = user.getRole();
+            if (role != null && role.equalsIgnoreCase("driver")) {
+                btnMyRides.setText("My Rides");
+            } else if (role != null && role.equalsIgnoreCase("admin")) {
+                btnMyRides.setText("All Rides");
+            } else {
+                btnMyRides.setText("My Bookings");
+            }
+        }
         if (user != null) {
             boolean isAdmin = user.getRole() != null && user.getRole().equalsIgnoreCase("admin");
             boolean isDriver = user.getRole() != null && user.getRole().equalsIgnoreCase("driver");

@@ -13,11 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kucingputeh.ChatActivity;
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.model.Booking;
+import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
+import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.util.MapUtils;
 
-import okhttp3.ResponseBody;
 import java.util.List;
+
+import okhttp3.ResponseBody;
 
 public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingViewHolder> {
 
@@ -41,6 +44,18 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         holder.tvRoute.setText(booking.getOrigin() + " ➔ " + booking.getDestination());
         holder.tvStatus.setText("Status: " + booking.getBookingStatus());
         holder.tvSeatsBooked.setText("Seats Secured: " + booking.getSeatsBooked());
+
+        // Only admins need to see which driver is assigned to a booking --
+        // drivers/passengers already know who they are.
+        User currentUser = new SharedPrefManager(holder.itemView.getContext()).getUser();
+        boolean isAdmin = currentUser != null && currentUser.getRole() != null
+                && currentUser.getRole().equalsIgnoreCase("admin");
+        if (isAdmin) {
+            holder.tvDriverInfo.setText("Driver ID: " + booking.getDriverId());
+            holder.tvDriverInfo.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvDriverInfo.setVisibility(View.GONE);
+        }
 
         holder.btnViewOnMap.setOnClickListener(v ->
                 MapUtils.openRouteOnMap(v.getContext(), booking.getOrigin(), booking.getDestination()));
@@ -127,7 +142,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     }
 
     public static class BookingViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoute, tvDepartureTime, tvSeatsBooked, tvStatus;
+        TextView tvRoute, tvDepartureTime, tvSeatsBooked, tvStatus, tvDriverInfo;
         Button btnCancelBooking, btnChatWithDriver, btnViewOnMap;
 
         public BookingViewHolder(@NonNull View itemView) {
@@ -136,6 +151,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             tvDepartureTime = itemView.findViewById(R.id.tvDepartureTime);
             tvSeatsBooked = itemView.findViewById(R.id.tvSeatsBooked);
             tvStatus = itemView.findViewById(R.id.tvStatus);
+            tvDriverInfo = itemView.findViewById(R.id.tvDriverInfo);
             btnCancelBooking = itemView.findViewById(R.id.btnCancelBooking);
             btnChatWithDriver = itemView.findViewById(R.id.btnChatWithDriver);
             btnViewOnMap = itemView.findViewById(R.id.btnViewOnMap);

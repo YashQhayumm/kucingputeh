@@ -13,8 +13,8 @@ import com.example.kucingputeh.model.Ride;
 import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
-import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.remote.RideService;
+import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.util.MapUtils;
 
 import okhttp3.ResponseBody;

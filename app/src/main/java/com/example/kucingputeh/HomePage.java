@@ -1,13 +1,13 @@
 package com.example.kucingputeh;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.kucingputeh.remote.LoginActivity; // Import LoginActivity anda
+
+import com.example.kucingputeh.remote.LoginActivity;
 
 public class HomePage extends AppCompatActivity {
 // homepage

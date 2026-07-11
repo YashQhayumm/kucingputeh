@@ -18,8 +18,8 @@ import com.example.kucingputeh.model.Ride;
 import com.example.kucingputeh.model.User;
 import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
-import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.remote.RideService;
+import com.example.kucingputeh.remote.SharedPrefManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -39,6 +39,7 @@ public class ViewMyRidesActivity extends AppCompatActivity {
 
     private RecyclerView rvMyRides;
     private TextView tvEmptyMyRides;
+    private TextView tvMyRidesTitle;
 
     // Driver view: rides this driver created
     private MyRideAdapter rideAdapter;
@@ -65,6 +66,7 @@ public class ViewMyRidesActivity extends AppCompatActivity {
 
         rvMyRides = findViewById(R.id.rvMyRides);
         tvEmptyMyRides = findViewById(R.id.tvEmptyMyRides);
+        tvMyRidesTitle = findViewById(R.id.tvMyRidesTitle);
 
         rvMyRides.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -78,8 +80,21 @@ public class ViewMyRidesActivity extends AppCompatActivity {
         }
 
         isDriverView = user.getRole() != null && user.getRole().equalsIgnoreCase("driver");
+        boolean isAdminView = user.getRole() != null && user.getRole().equalsIgnoreCase("admin");
 
-        if (isDriverView) {
+        if (isAdminView) {
+            // Admin: see every ride in the system, with the assigned driver shown
+            // (MyRideAdapter shows "Driver ID: X" automatically when the logged-in
+            // user's role is admin).
+            tvMyRidesTitle.setText("All Rides");
+            tvEmptyMyRides.setText("There are no rides in the system yet.");
+            if (rideAdapter == null) {
+                rideAdapter = new MyRideAdapter(myRideList, this::showPassengersForRide);
+            }
+            rvMyRides.setAdapter(rideAdapter);
+            fetchAllRides();
+        } else if (isDriverView) {
+            tvMyRidesTitle.setText("My Rides");
             tvEmptyMyRides.setText("You haven't created any rides yet.");
             if (rideAdapter == null) {
                 rideAdapter = new MyRideAdapter(myRideList, this::showPassengersForRide);
@@ -87,6 +102,7 @@ public class ViewMyRidesActivity extends AppCompatActivity {
             rvMyRides.setAdapter(rideAdapter);
             fetchMyRides(user.getId());
         } else {
+            tvMyRidesTitle.setText("My Bookings");
             tvEmptyMyRides.setText("You haven't booked any rides yet.");
             if (bookingAdapter == null) {
                 bookingAdapter = new BookingAdapter(myBookingList);
@@ -113,6 +129,30 @@ public class ViewMyRidesActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<List<Ride>> call, @NonNull Throwable t) {
                 Log.e("MY_RIDES", "Network error", t);
+                Toast.makeText(ViewMyRidesActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                toggleEmptyState(myRideList.isEmpty());
+            }
+        });
+    }
+
+    // Admin view: every ride in the system, regardless of driver.
+    private void fetchAllRides() {
+        rideService.getAllRides().enqueue(new Callback<List<Ride>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Ride>> call, @NonNull Response<List<Ride>> response) {
+                myRideList.clear();
+                if (response.isSuccessful() && response.body() != null) {
+                    myRideList.addAll(response.body());
+                } else {
+                    Log.e("ALL_RIDES", "Server returned code: " + response.code());
+                }
+                rideAdapter.notifyDataSetChanged();
+                toggleEmptyState(myRideList.isEmpty());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Ride>> call, @NonNull Throwable t) {
+                Log.e("ALL_RIDES", "Network error", t);
                 Toast.makeText(ViewMyRidesActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
                 toggleEmptyState(myRideList.isEmpty());
             }

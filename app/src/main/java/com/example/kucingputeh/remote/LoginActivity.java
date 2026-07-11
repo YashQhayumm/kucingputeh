@@ -16,10 +16,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.kucingputeh.DashboardActivity;
-import com.example.kucingputeh.ProfileActivity;
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.RegisterActivity;
-import com.example.kucingputeh.ViewAvailableRidesActivity;
 import com.example.kucingputeh.model.FailLogin;
 import com.example.kucingputeh.model.User;
 import com.google.gson.Gson;

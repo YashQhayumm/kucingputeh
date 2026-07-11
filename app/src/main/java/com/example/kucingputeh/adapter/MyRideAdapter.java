@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kucingputeh.R;
 import com.example.kucingputeh.model.Ride;
+import com.example.kucingputeh.model.User;
+import com.example.kucingputeh.remote.SharedPrefManager;
 import com.example.kucingputeh.util.MapUtils;
 
 import java.util.List;
@@ -44,6 +46,18 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.MyRideView
         holder.tvDepartureTime.setText("Departure: " + ride.getDepartureTime());
         holder.tvAvailableSeats.setText("Available Seats: " + ride.getAvailableSeats());
 
+        // Only admins need to see which driver owns each ride here -- a
+        // driver looking at their own "My Rides" list already knows it's them.
+        User currentUser = new SharedPrefManager(holder.itemView.getContext()).getUser();
+        boolean isAdmin = currentUser != null && currentUser.getRole() != null
+                && currentUser.getRole().equalsIgnoreCase("admin");
+        if (isAdmin) {
+            holder.tvDriverInfo.setText("Driver ID: " + ride.getDriverId());
+            holder.tvDriverInfo.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvDriverInfo.setVisibility(View.GONE);
+        }
+
         holder.btnViewPassengers.setOnClickListener(v -> {
             if (listener != null) listener.onViewPassengersClick(ride);
         });
@@ -58,7 +72,7 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.MyRideView
     }
 
     public static class MyRideViewHolder extends RecyclerView.ViewHolder {
-        TextView tvRoute, tvDepartureTime, tvAvailableSeats;
+        TextView tvRoute, tvDepartureTime, tvAvailableSeats, tvDriverInfo;
         Button btnViewPassengers, btnViewOnMap;
 
         public MyRideViewHolder(@NonNull View itemView) {
@@ -66,6 +80,7 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.MyRideView
             tvRoute = itemView.findViewById(R.id.tvRoute);
             tvDepartureTime = itemView.findViewById(R.id.tvDepartureTime);
             tvAvailableSeats = itemView.findViewById(R.id.tvAvailableSeats);
+            tvDriverInfo = itemView.findViewById(R.id.tvDriverInfo);
             btnViewPassengers = itemView.findViewById(R.id.btnViewPassengers);
             btnViewOnMap = itemView.findViewById(R.id.btnViewOnMap);
         }
