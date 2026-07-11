@@ -14,7 +14,7 @@ public class RetrofitClient {
     // Fallback key used only when nobody is logged in yet (e.g. hitting the
     // login/register endpoints themselves). This is the organization-level
     // secret from the "organizations" table, NOT a per-user session token.
-    private static final String ORG_API_KEY = "206b2dbe-ecc9-490b-b81b-83767288bc5e";
+    private static final String ORG_API_KEY = "8bbe3150-20aa-4e8e-9f42-12638472c551";
 
     public static Retrofit getClient(String baseUrl) {
         if (retrofit == null) {
