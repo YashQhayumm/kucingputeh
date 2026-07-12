@@ -3,6 +3,7 @@ package com.example.kucingputeh;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -59,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnFindRides).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ViewAvailableRidesActivity.class)));
 
-        findViewById(R.id.btnCreateRide).setOnClickListener(v ->
+        Button btnCreateRide = findViewById(R.id.btnCreateRide);
+        btnCreateRide.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, CreateRideActivity.class)));
 
         findViewById(R.id.btnMyRides).setOnClickListener(v ->
@@ -88,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             boolean isAdmin = user.getRole() != null && user.getRole().equalsIgnoreCase("admin");
             boolean isDriver = user.getRole() != null && user.getRole().equalsIgnoreCase("driver");
+
+            // Passengers only get Find Rides, My Bookings, Profile, and their
+            // own booking list here -- Create Ride is a driver/admin action.
+            btnCreateRide.setVisibility((isAdmin || isDriver) ? View.VISIBLE : View.GONE);
 
             if (isAdmin || isDriver) {
                 // Admin/driver Bookings view: show all bookings, not just

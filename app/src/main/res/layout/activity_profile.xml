@@ -25,7 +25,7 @@
                     android:id="@+id/imgProfile"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:src="@drawable/profileicon"
+                    android:src="@drawable/img"
                     android:scaleType="centerCrop"
                     android:clickable="true"
                     android:focusable="true"
@@ -77,15 +77,16 @@
                 android:textStyle="bold"
                 android:textColor="#061369" />
 
-            <EditText
+            <TextView
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="16dp"
-                android:hint="Full Name"
-                android:inputType="textPersonName"
-                android:autofillHints="name" />
+                android:paddingStart="4dp"
+                android:paddingTop="14dp"
+                android:textColor="#212121"
+                android:textSize="16sp" />
 
             <!-- Email -->
             <TextView
@@ -95,15 +96,16 @@
                 android:textStyle="bold"
                 android:textColor="#061369" />
 
-            <EditText
+            <TextView
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="16dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:autofillHints="emailAddress" />
+                android:paddingStart="4dp"
+                android:paddingTop="14dp"
+                android:textColor="#212121"
+                android:textSize="16sp" />
 
             <!-- Phone -->
             <TextView
@@ -113,15 +115,16 @@
                 android:textStyle="bold"
                 android:textColor="#061369" />
 
-            <EditText
+            <TextView
                 android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="24dp"
-                android:hint="Phone Number"
-                android:inputType="phone"
-                android:autofillHints="phone" />
+                android:paddingStart="4dp"
+                android:paddingTop="14dp"
+                android:textColor="#212121"
+                android:textSize="16sp" />
 
             <!-- Update -->
             <Button
