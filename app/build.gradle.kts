@@ -1,6 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+// Load ORG_API_KEY from local.properties so the real key never lives in
+// source code / version control. local.properties is already gitignored.
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+val orgApiKey: String = localProperties.getProperty("ORG_API_KEY") ?: ""
 
 android {
     namespace = "com.example.kucingputeh"
@@ -19,6 +30,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "ORG_API_KEY", "\"$orgApiKey\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

@@ -1,5 +1,6 @@
 package com.example.kucingputeh.remote;
 
+import com.example.kucingputeh.BuildConfig;
 import com.example.kucingputeh.KucingPutehApp;
 import com.example.kucingputeh.model.User;
 
@@ -14,7 +15,10 @@ public class RetrofitClient {
     // Fallback key used only when nobody is logged in yet (e.g. hitting the
     // login/register endpoints themselves). This is the organization-level
     // secret from the "organizations" table, NOT a per-user session token.
-    private static final String ORG_API_KEY = "d2254321-62e7-4bf9-92cb-6fb3c14e0d52";
+    // The actual value is NOT hardcoded here -- it's injected at build time
+    // from local.properties (which is gitignored) via BuildConfig, so the
+    // real key never lives in source control.
+    private static final String ORG_API_KEY = BuildConfig.ORG_API_KEY;
 
     public static Retrofit getClient(String baseUrl) {
         if (retrofit == null) {
