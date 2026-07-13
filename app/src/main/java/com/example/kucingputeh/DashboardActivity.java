@@ -3,6 +3,7 @@ package com.example.kucingputeh;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -26,6 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
         CardView cardFindRides = findViewById(R.id.cardFindRides);
         CardView cardCreateRide = findViewById(R.id.cardCreateRide);
         CardView cardMyCreatedRides = findViewById(R.id.cardMyCreatedRides);
+        TextView textMyCreatedRides = findViewById(R.id.textMyCreatedRides);
         CardView cardMyRides = findViewById(R.id.cardMyRides);
         CardView cardBookings = findViewById(R.id.cardBookings);
         CardView cardProfile = findViewById(R.id.cardProfile);
@@ -70,6 +72,10 @@ public class DashboardActivity extends AppCompatActivity {
         cardCreateRide.setVisibility(canManageRides ? View.VISIBLE : View.GONE);
         cardMyCreatedRides.setVisibility(canManageRides ? View.VISIBLE : View.GONE);
         cardMyRides.setVisibility(canManageRides ? View.GONE : View.VISIBLE);
+
+        // Admin sees "All Ride" (manages every ride), driver still sees "My Rides".
+        textMyCreatedRides.setText(isAdmin ? "All Ride" : "My Rides");
+
         // Bookings is available to every role now (passengers see their own
         // bookings, admin/driver see all bookings -- handled in MainActivity).
         cardBookings.setVisibility(View.VISIBLE);
