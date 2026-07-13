@@ -20,6 +20,7 @@ import com.example.kucingputeh.remote.ApiUtils;
 import com.example.kucingputeh.remote.BookingService;
 import com.example.kucingputeh.remote.RideService;
 import com.example.kucingputeh.remote.SharedPrefManager;
+import com.example.kucingputeh.remote.UserService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -53,6 +55,7 @@ public class ViewMyRidesActivity extends AppCompatActivity {
 
     private RideService rideService;
     private BookingService bookingService;
+    private UserService userService;
     private SharedPrefManager spm;
 
     @Override
@@ -63,6 +66,7 @@ public class ViewMyRidesActivity extends AppCompatActivity {
         spm = new SharedPrefManager(getApplicationContext());
         rideService = ApiUtils.getRideService();
         bookingService = ApiUtils.getBookingService();
+        userService = ApiUtils.getUserService();
 
         rvMyRides = findViewById(R.id.rvMyRides);
         tvEmptyMyRides = findViewById(R.id.tvEmptyMyRides);
@@ -205,7 +209,11 @@ public class ViewMyRidesActivity extends AppCompatActivity {
     // Fetches everyone who booked a given ride and shows them in a dialog
     private void showPassengersForRide(Ride ride) {
         Map<String, String> filters = new HashMap<>();
-        filters.put("ride_id", String.valueOf(ride.getRideId()));
+        // NOTE: the Bookings table's foreign key to Rides is "RideID"
+        // (matches what bookRide() writes via @Field("RideID") and what
+        // comes back nested in the JSON), NOT "ride_id". Filtering on the
+        // wrong key silently returned zero rows every time.
+        filters.put("RideID", String.valueOf(ride.getRideId()));
 
         bookingService.viewBookings(filters).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -216,13 +224,13 @@ public class ViewMyRidesActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         Type listType = new TypeToken<List<Booking>>() {}.getType();
                         List<Booking> bookings = gson.fromJson(json, listType);
-                        displayPassengerDialog(ride, bookings);
+                        fetchPassengerNamesAndShowDialog(ride, bookings);
                     } catch (IOException e) {
                         Log.e("MY_RIDES", "Failed to parse bookings", e);
                         Toast.makeText(ViewMyRidesActivity.this, "Failed to load passengers.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    displayPassengerDialog(ride, null);
+                    displayPassengerDialog(ride, null, null);
                 }
             }
 
@@ -234,14 +242,55 @@ public class ViewMyRidesActivity extends AppCompatActivity {
         });
     }
 
-    private void displayPassengerDialog(Ride ride, List<Booking> bookings) {
+    // Looks up each passenger's full name (username) via users/{id} so the
+    // dialog can show a name instead of just a raw passenger_id, then shows
+    // the dialog once every lookup has finished (success or failure).
+    private void fetchPassengerNamesAndShowDialog(Ride ride, List<Booking> bookings) {
+        if (bookings == null || bookings.isEmpty()) {
+            displayPassengerDialog(ride, bookings, null);
+            return;
+        }
+
+        Map<Integer, String> passengerNames = new HashMap<>();
+        AtomicInteger pending = new AtomicInteger(bookings.size());
+
+        for (Booking booking : bookings) {
+            int passengerId = booking.getPassengerId();
+            userService.getUserById(passengerId).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        passengerNames.put(passengerId, response.body().getUsername());
+                    }
+                    if (pending.decrementAndGet() == 0) {
+                        displayPassengerDialog(ride, bookings, passengerNames);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                    Log.e("MY_RIDES", "Failed to fetch passenger #" + passengerId, t);
+                    if (pending.decrementAndGet() == 0) {
+                        displayPassengerDialog(ride, bookings, passengerNames);
+                    }
+                }
+            });
+        }
+    }
+
+    private void displayPassengerDialog(Ride ride, List<Booking> bookings, Map<Integer, String> passengerNames) {
         StringBuilder message = new StringBuilder();
 
         if (bookings == null || bookings.isEmpty()) {
             message.append("No passengers have booked this ride yet.");
         } else {
             for (Booking booking : bookings) {
-                message.append("Passenger ID: ").append(booking.getPassengerId())
+                String name = passengerNames != null ? passengerNames.get(booking.getPassengerId()) : null;
+                if (name == null || name.trim().isEmpty()) {
+                    name = "Unknown";
+                }
+                message.append("Name: ").append(name)
+                        .append("\nPassenger ID: ").append(booking.getPassengerId())
                         .append("  •  Seats: ").append(booking.getSeatsBooked())
                         .append("  •  Status: ").append(booking.getBookingStatus())
                         .append("\n\n");

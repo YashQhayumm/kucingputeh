@@ -6,9 +6,18 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface UserService {
+
+    // Auto-CRUD read route (GET <table_name>/{id}), same pattern already
+    // used by DriverService/PassengerService for PUT users/{id}. Used to
+    // look up a passenger's username (full name) by ID.
+    @GET("users/{id}")
+    Call<User> getUserById(@Path("id") int id);
+
     @FormUrlEncoded
     @POST("users/login")
     Call<User> login(
