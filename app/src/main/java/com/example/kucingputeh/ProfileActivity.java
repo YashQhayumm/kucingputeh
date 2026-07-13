@@ -43,14 +43,6 @@ public class ProfileActivity extends AppCompatActivity {
         TextView btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> onBackPressed());
 
-        User user = spm.getUser();
-
-        if (user != null) {
-            etName.setText(user.getUsername());
-            etEmail.setText(user.getEmail());
-            etPhone.setText(user.getPhone());
-        }
-
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
@@ -90,5 +82,24 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Re-read from SharedPrefManager every time this screen becomes
+        // visible -- including when Update Profile calls finish() and
+        // returns here, since onCreate() does NOT run again on that path
+        // and the TextViews would otherwise keep showing the old values.
+        loadProfileData();
+    }
+
+    private void loadProfileData() {
+        User user = spm.getUser();
+        if (user != null) {
+            etName.setText(user.getUsername());
+            etEmail.setText(user.getEmail());
+            etPhone.setText(user.getPhone());
+        }
     }
 }
