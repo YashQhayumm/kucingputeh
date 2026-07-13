@@ -8,7 +8,7 @@ public class Booking {
     private int bookingId;
 
     @SerializedName("RideID")
-    private Ride ride;
+    private com.google.gson.JsonElement rideData;
 
     @SerializedName("passenger_id")
     private int passengerId;
@@ -21,39 +21,44 @@ public class Booking {
 
     public Booking() {}
 
-    public static class Ride {
-        @SerializedName("RideID")
-        private int rideId;
-
-        @SerializedName(value = "driver_id", alternate = {"DriverID", "driverId"})
-        private int driverId;
-
-        @SerializedName("Origin")
-        private String origin;
-
-        @SerializedName("Destination")
-        private String destination;
-
-        public int getRideId() { return rideId; }
-        public int getDriverId() { return driverId; }
-        public String getOrigin() { return origin; }
-        public String getDestination() { return destination; }
+    public int getRideId() {
+        if (rideData == null || rideData.isJsonNull()) return 0;
+        if (rideData.isJsonPrimitive()) {
+            try { return rideData.getAsInt(); } catch (Exception e) { return 0; }
+        }
+        if (rideData.isJsonObject()) {
+            com.google.gson.JsonObject obj = rideData.getAsJsonObject();
+            if (obj.has("RideID")) return obj.get("RideID").getAsInt();
+            if (obj.has("ride_id")) return obj.get("ride_id").getAsInt();
+            if (obj.has("rideId")) return obj.get("rideId").getAsInt();
+        }
+        return 0;
     }
 
     public int getDriverId() {
-        return ride != null ? ride.getDriverId() : 0;
-    }
-
-    public int getRideId() {
-        return ride != null ? ride.getRideId() : 0;
+        if (rideData != null && rideData.isJsonObject()) {
+            com.google.gson.JsonObject obj = rideData.getAsJsonObject();
+            if (obj.has("driver_id")) return obj.get("driver_id").getAsInt();
+            if (obj.has("DriverID")) return obj.get("DriverID").getAsInt();
+            if (obj.has("driverId")) return obj.get("driverId").getAsInt();
+        }
+        return 0;
     }
 
     public String getOrigin() {
-        return ride != null ? ride.getOrigin() : "Unknown";
+        if (rideData != null && rideData.isJsonObject()) {
+            com.google.gson.JsonObject obj = rideData.getAsJsonObject();
+            if (obj.has("Origin")) return obj.get("Origin").getAsString();
+        }
+        return "Unknown";
     }
 
     public String getDestination() {
-        return ride != null ? ride.getDestination() : "Unknown";
+        if (rideData != null && rideData.isJsonObject()) {
+            com.google.gson.JsonObject obj = rideData.getAsJsonObject();
+            if (obj.has("Destination")) return obj.get("Destination").getAsString();
+        }
+        return "Unknown";
     }
 
     public int getBookingId() { return bookingId; }

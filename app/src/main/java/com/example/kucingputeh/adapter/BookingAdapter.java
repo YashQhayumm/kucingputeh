@@ -65,6 +65,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             // Assuming driver_id is available in Booking/Ride model
             intent.putExtra("RIDE_ID", booking.getRideId());
             intent.putExtra("PASSENGER_ID", booking.getPassengerId());
+            intent.putExtra("DRIVER_ID", booking.getDriverId());
             v.getContext().startActivity(intent);
         });
 

@@ -3,6 +3,7 @@ package com.example.kucingputeh;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -279,27 +280,26 @@ public class ViewMyRidesActivity extends AppCompatActivity {
     }
 
     private void displayPassengerDialog(Ride ride, List<Booking> bookings, Map<Integer, String> passengerNames) {
-        StringBuilder message = new StringBuilder();
-
         if (bookings == null || bookings.isEmpty()) {
-            message.append("No passengers have booked this ride yet.");
-        } else {
-            for (Booking booking : bookings) {
-                String name = passengerNames != null ? passengerNames.get(booking.getPassengerId()) : null;
-                if (name == null || name.trim().isEmpty()) {
-                    name = "Unknown";
-                }
-                message.append("Name: ").append(name)
-                        .append("\nPassenger ID: ").append(booking.getPassengerId())
-                        .append("  •  Seats: ").append(booking.getSeatsBooked())
-                        .append("  •  Status: ").append(booking.getBookingStatus())
-                        .append("\n\n");
-            }
+            new AlertDialog.Builder(this)
+                    .setTitle(ride.getOrigin() + " ➔ " + ride.getDestination())
+                    .setMessage("No passengers have booked this ride yet.")
+                    .setPositiveButton("Close", null)
+                    .show();
+            return;
         }
 
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_passengers, null);
+        RecyclerView rvPassengers = dialogView.findViewById(R.id.rvPassengers);
+        rvPassengers.setLayoutManager(new LinearLayoutManager(this));
+
+        com.example.kucingputeh.adapter.PassengerAdapter adapter =
+                new com.example.kucingputeh.adapter.PassengerAdapter(bookings, passengerNames, ride.getRideId(), ride.getDriverId());
+        rvPassengers.setAdapter(adapter);
+
         new AlertDialog.Builder(this)
-                .setTitle(ride.getOrigin() + " ➔ " + ride.getDestination())
-                .setMessage(message.toString().trim())
+                .setTitle("Passengers for " + ride.getOrigin() + " ➔ " + ride.getDestination())
+                .setView(dialogView)
                 .setPositiveButton("Close", null)
                 .show();
     }
