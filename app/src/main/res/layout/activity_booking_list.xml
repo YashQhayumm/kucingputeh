@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Find Rides"
+        android:visibility="gone"
         android:layout_marginBottom="8dp"/>
 
     <Button
@@ -28,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create Ride"
+        android:visibility="gone"
         android:layout_marginBottom="8dp"/>
 
     <Button
@@ -38,6 +40,7 @@
         android:textStyle="bold"
         android:backgroundTint="#9C27B0"
         android:textColor="#FFFFFF"
+        android:visibility="gone"
         android:layout_marginBottom="12dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
