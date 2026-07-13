@@ -37,6 +37,18 @@ public class ChatActivity extends AppCompatActivity {
     private int receiverId;
     private String myUsername;
     private String receiverUsername = "Them";
+    private int lastMessageCount = -1;
+
+    private android.os.Handler pollHandler = new android.os.Handler();
+    private Runnable pollRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (receiverId > 0) {
+                loadMessages();
+            }
+            pollHandler.postDelayed(this, 5000); // Poll every 5 seconds
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +72,24 @@ public class ChatActivity extends AppCompatActivity {
         myUsername = spm.getUser().getUsername();
 
         if (driverId <= 0 && rideId > 0) {
-            // If driverId is missing, fetch it from the ride details
             fetchRideDetailsAndInit(rideId, passengerId);
         } else {
             initializeChat(driverId, passengerId);
         }
 
         btnSend.setOnClickListener(v -> sendMessage());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pollHandler.post(pollRunnable);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pollHandler.removeCallbacks(pollRunnable);
     }
 
     private void fetchRideDetailsAndInit(int rideId, int passengerId) {
@@ -101,7 +124,6 @@ public class ChatActivity extends AppCompatActivity {
             Log.e("CHAT_ERR", "receiverId is " + receiverId + ". RideID: " + rideId + ", PassID: " + passengerId + ", DriverID: " + driverId);
         } else {
             fetchReceiverName(receiverId);
-            loadMessages();
         }
     }
 
@@ -111,12 +133,10 @@ public class ChatActivity extends AppCompatActivity {
             public void onResponse(Call<com.example.kucingputeh.model.User> call, Response<com.example.kucingputeh.model.User> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     receiverUsername = response.body().getUsername();
-                    // Set title to include receiver's name
+
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle("Chat with " + receiverUsername);
                     }
-                    // Refresh the message display to show the correct name
-                    loadMessages();
                 }
             }
 
@@ -134,7 +154,6 @@ public class ChatActivity extends AppCompatActivity {
         final JSONArray[] combinedResults = new JSONArray[2];
         final boolean[] callFinished = {false, false};
 
-        // Call 1: ME to THEM
         chatService.getMessages(myUserId, receiverId, rideId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -154,7 +173,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        // Call 2: THEM to ME
         chatService.getMessages(receiverId, myUserId, rideId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -178,6 +196,10 @@ public class ChatActivity extends AppCompatActivity {
     private void checkAndDisplay(boolean[] finished, JSONArray[] results) {
         if (finished[0] && finished[1]) {
             try {
+                int count = results[0].length() + results[1].length();
+                if (count == lastMessageCount && count > 0) return;
+                lastMessageCount = count;
+
                 chatContainer.removeAllViews();
                 JSONArray all = new JSONArray();
                 for (int i = 0; i < results[0].length(); i++) all.put(results[0].get(i));
@@ -190,11 +212,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void displayCombinedMessages(JSONArray jsonArray) throws Exception {
-        // Sort array by 'id' if possible (assuming higher ID = newer)
+
         java.util.List<JSONObject> list = new java.util.ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) list.add(jsonArray.getJSONObject(i));
         
-        // Sort by ID to keep conversation in order
         java.util.Collections.sort(list, (a, b) -> {
             try { return a.getInt("id") - b.getInt("id"); } catch (Exception e) { return 0; }
         });
@@ -222,7 +243,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         ChatService chatService = ApiUtils.getChatService();
-        // Added rideId parameter
         chatService.sendMessage(myUserId, receiverId, message, rideId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
