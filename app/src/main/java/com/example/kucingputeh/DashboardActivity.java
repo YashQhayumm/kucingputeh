@@ -25,6 +25,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         CardView cardFindRides = findViewById(R.id.cardFindRides);
         CardView cardCreateRide = findViewById(R.id.cardCreateRide);
+        CardView cardMyCreatedRides = findViewById(R.id.cardMyCreatedRides);
         CardView cardMyRides = findViewById(R.id.cardMyRides);
         CardView cardBookings = findViewById(R.id.cardBookings);
         CardView cardProfile = findViewById(R.id.cardProfile);
@@ -35,6 +36,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         cardCreateRide.setOnClickListener(v ->
                 startActivity(new Intent(DashboardActivity.this, CreateRideActivity.class)));
+
+        cardMyCreatedRides.setOnClickListener(v ->
+                startActivity(new Intent(DashboardActivity.this, ViewMyRidesActivity.class)));
 
         cardMyRides.setOnClickListener(v ->
                 startActivity(new Intent(DashboardActivity.this, ViewMyRidesActivity.class)));
@@ -54,8 +58,9 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         // Show/hide cards depending on the logged-in user's role.
-        // Admin & Driver: Find Rides, Create Ride, Bookings, Profile, Logout (no My Rides)
-        // Passenger:      Find Rides, My Rides, Bookings, Profile, Logout (no Create Ride)
+        // Admin:          Find Rides, Create Ride, My Rides (All Rides), Bookings, Profile, Logout
+        // Driver:         Find Rides, Create Ride, My Rides, Bookings, Profile, Logout
+        // Passenger:      Find Rides, My Rides (My Bookings), Bookings, Profile, Logout (no Create Ride)
         User user = spm.getUser();
         String role = (user != null) ? user.getRole() : null;
         boolean isAdmin = role != null && role.equalsIgnoreCase("admin");
@@ -63,6 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
         boolean canManageRides = isAdmin || isDriver;
 
         cardCreateRide.setVisibility(canManageRides ? View.VISIBLE : View.GONE);
+        cardMyCreatedRides.setVisibility(canManageRides ? View.VISIBLE : View.GONE);
         cardMyRides.setVisibility(canManageRides ? View.GONE : View.VISIBLE);
         // Bookings is available to every role now (passengers see their own
         // bookings, admin/driver see all bookings -- handled in MainActivity).

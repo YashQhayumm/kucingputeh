@@ -69,6 +69,8 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             v.getContext().startActivity(intent);
         });
 
+        holder.btnRateRide.setOnClickListener(v -> showRatingDialog(v, booking));
+
         // CANCEL BUTTON HERE
         holder.btnCancelBooking.setOnClickListener(v -> {
             int bookingIdToDelete = booking.getBookingId();
@@ -96,6 +98,46 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
                 }
             });
         });
+    }
+
+    private void showRatingDialog(View v, Booking booking) {
+        android.view.View dialogView = android.view.LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_rating, null);
+        android.widget.RatingBar ratingBar = dialogView.findViewById(R.id.ratingBar);
+        android.widget.EditText etComments = dialogView.findViewById(R.id.etComments);
+
+        new android.app.AlertDialog.Builder(v.getContext())
+                .setTitle("Rate your Ride")
+                .setView(dialogView)
+                .setPositiveButton("Submit", (dialog, which) -> {
+                    int score = (int) ratingBar.getRating();
+                    String comments = etComments.getText().toString();
+                    SharedPrefManager spm = new SharedPrefManager(v.getContext());
+                    int myId = spm.getUser().getId();
+
+                    ApiUtils.getRatingService().addRating(
+                            booking.getRideId(),
+                            myId,
+                            booking.getDriverId(),
+                            score,
+                            comments
+                    ).enqueue(new retrofit2.Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                            if (response.isSuccessful()) {
+                                android.widget.Toast.makeText(v.getContext(), "Thank you for your rating!", android.widget.Toast.LENGTH_SHORT).show();
+                            } else {
+                                android.widget.Toast.makeText(v.getContext(), "Failed to submit rating", android.widget.Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                            android.widget.Toast.makeText(v.getContext(), "Error: " + t.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void cancelBookingAndRefreshSeats(View v, int bookingId, int rideId, int newSeats, int position) {
@@ -144,7 +186,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
     public static class BookingViewHolder extends RecyclerView.ViewHolder {
         TextView tvRoute, tvDepartureTime, tvSeatsBooked, tvStatus, tvDriverInfo;
-        Button btnCancelBooking, btnChatWithDriver, btnViewOnMap;
+        Button btnCancelBooking, btnChatWithDriver, btnViewOnMap, btnRateRide;
 
         public BookingViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -156,6 +198,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             btnCancelBooking = itemView.findViewById(R.id.btnCancelBooking);
             btnChatWithDriver = itemView.findViewById(R.id.btnChatWithDriver);
             btnViewOnMap = itemView.findViewById(R.id.btnViewOnMap);
+            btnRateRide = itemView.findViewById(R.id.btnRateRide);
         }
     }
 }

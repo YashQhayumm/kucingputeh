@@ -223,10 +223,22 @@ public class ChatActivity extends AppCompatActivity {
         for (JSONObject obj : list) {
             int senderId = obj.getInt("sender_id");
             String msgText = obj.getString("message");
+            String createdAt = obj.optString("created_at", "");
 
             TextView tvMessage = new TextView(ChatActivity.this);
             String displayName = (senderId == myUserId) ? myUsername : receiverUsername;
-            tvMessage.setText(displayName + ": " + msgText);
+            
+            String timeStr = "";
+            if (!createdAt.isEmpty()) {
+                try {
+                    // Extract time from YYYY-MM-DD HH:MM:SS
+                    if (createdAt.length() >= 19) {
+                        timeStr = " [" + createdAt.substring(11, 16) + "]";
+                    }
+                } catch (Exception e) {}
+            }
+            
+            tvMessage.setText(displayName + timeStr + ": " + msgText);
             tvMessage.setTextSize(16);
             tvMessage.setPadding(16, 12, 16, 12);
             chatContainer.addView(tvMessage);
@@ -247,15 +259,8 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    TextView tvMessage = new TextView(ChatActivity.this);
-                    tvMessage.setText(myUsername + ": " + message);
-                    tvMessage.setTextSize(16);
-                    tvMessage.setPadding(16, 12, 16, 12);
-
-                    chatContainer.addView(tvMessage);
                     etMessage.setText("");
-
-                    scrollChat.post(() -> scrollChat.fullScroll(ScrollView.FOCUS_DOWN));
+                    loadMessages(); // Refresh to get the actual message with ID and timestamp
                 } else {
                     Toast.makeText(ChatActivity.this, "Failed to send to server. Code: " + response.code(), Toast.LENGTH_SHORT).show();
                 }

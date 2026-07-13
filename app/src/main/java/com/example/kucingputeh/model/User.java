@@ -22,6 +22,9 @@ public class User {
     @SerializedName("car_model")
     private String vehicleModel;
 
+    @SerializedName("rating")
+    private Double rating;
+
 
     public User() {
     }
@@ -63,4 +66,7 @@ public class User {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public Double getRating() { return rating; }
+    public void setRating(Double rating) { this.rating = rating; }
 }

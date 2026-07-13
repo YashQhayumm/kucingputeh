@@ -19,7 +19,7 @@ import com.example.kucingputeh.remote.UpdatePassengerProfile;
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView imgProfile;
-    private TextView etName, etEmail, etPhone;
+    private TextView etName, etEmail, etPhone, txtRating;
     private Button btnUpdate, btnLogout;
     private SharedPrefManager spm;
 
@@ -36,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
         etPhone = findViewById(R.id.etPhone);
+        txtRating = findViewById(R.id.txtRating);
 
         btnUpdate = findViewById(R.id.btnUpdate);
         btnLogout = findViewById(R.id.btnLogout);
@@ -87,10 +88,6 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Re-read from SharedPrefManager every time this screen becomes
-        // visible -- including when Update Profile calls finish() and
-        // returns here, since onCreate() does NOT run again on that path
-        // and the TextViews would otherwise keep showing the old values.
         loadProfileData();
     }
 
@@ -100,6 +97,59 @@ public class ProfileActivity extends AppCompatActivity {
             etName.setText(user.getUsername());
             etEmail.setText(user.getEmail());
             etPhone.setText(user.getPhone());
+
+            if (user.getRating() != null) {
+                txtRating.setText(String.format("Rating: %.1f ★", user.getRating()));
+            } else {
+                txtRating.setText("Rating: N/A");
+            }
+
+            fetchFreshUserData(user.getId());
         }
+    }
+
+    private void fetchFreshUserData(int userId) {
+        com.example.kucingputeh.remote.ApiUtils.getUserService().getUserById(userId).enqueue(new retrofit2.Callback<User>() {
+            @Override
+            public void onResponse(retrofit2.Call<User> call, retrofit2.Response<User> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    User freshUser = response.body();
+                    // Update UI (except rating, because fetch separately)
+                    etName.setText(freshUser.getUsername());
+                    etEmail.setText(freshUser.getEmail());
+                    etPhone.setText(freshUser.getPhone());
+
+                    // Fetch fresh rating from ratings table
+                    com.example.kucingputeh.remote.ApiUtils.getRatingService().getRatingsByReviewee(userId).enqueue(new retrofit2.Callback<java.util.List<com.example.kucingputeh.model.Rating>>() {
+                        @Override
+                        public void onResponse(retrofit2.Call<java.util.List<com.example.kucingputeh.model.Rating>> call, retrofit2.Response<java.util.List<com.example.kucingputeh.model.Rating>> response) {
+                            if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                                double sum = 0;
+                                for (com.example.kucingputeh.model.Rating r : response.body()) {
+                                    sum += r.getScore();
+                                }
+                                double avg = sum / response.body().size();
+                                txtRating.setText(String.format(java.util.Locale.US, "Rating: %.1f ★", avg));
+                                freshUser.setRating(avg);
+                            } else {
+                                txtRating.setText("Rating: N/A");
+                                freshUser.setRating(null);
+                            }
+                            spm.storeUser(freshUser);
+                        }
+
+                        @Override
+                        public void onFailure(retrofit2.Call<java.util.List<com.example.kucingputeh.model.Rating>> call, Throwable t) {
+                            // Even if rating fetch fails, store the user data we got
+                            spm.storeUser(freshUser);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<User> call, Throwable t) {
+            }
+        });
     }
 }

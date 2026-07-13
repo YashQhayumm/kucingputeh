@@ -14,4 +14,19 @@ public class Rating {
         this.score = score;
         this.comments = comments;
     }
+
+    public int getRideId() { return ride_id; }
+    public void setRideId(int ride_id) { this.ride_id = ride_id; }
+
+    public int getReviewerId() { return reviewer_id; }
+    public void setReviewerId(int reviewer_id) { this.reviewer_id = reviewer_id; }
+
+    public int getRevieweeId() { return reviewee_id; }
+    public void setRevieweeId(int reviewee_id) { this.reviewee_id = reviewee_id; }
+
+    public int getScore() { return score; }
+    public void setScore(int score) { this.score = score; }
+
+    public String getComments() { return comments; }
+    public void setComments(String comments) { this.comments = comments; }
 }

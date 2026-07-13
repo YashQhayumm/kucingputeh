@@ -66,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
         btnCreateRide.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, CreateRideActivity.class)));
 
-        findViewById(R.id.btnMyRides).setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, ViewMyRidesActivity.class)));
-
         findViewById(R.id.btnProfile).setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class)));
 
@@ -78,17 +75,6 @@ public class MainActivity extends AppCompatActivity {
         bookingService = ApiUtils.getBookingService();
 
         User user = spm.getUser();
-        Button btnMyRides = findViewById(R.id.btnMyRides);
-        if (user != null) {
-            String role = user.getRole();
-            if (role != null && role.equalsIgnoreCase("driver")) {
-                btnMyRides.setText("My Rides");
-            } else if (role != null && role.equalsIgnoreCase("admin")) {
-                btnMyRides.setText("All Rides");
-            } else {
-                btnMyRides.setText("My Bookings");
-            }
-        }
         if (user != null) {
             boolean isAdmin = user.getRole() != null && user.getRole().equalsIgnoreCase("admin");
             boolean isDriver = user.getRole() != null && user.getRole().equalsIgnoreCase("driver");
